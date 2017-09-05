@@ -1,0 +1,19 @@
+<table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <th>Descripción</th>
+        <th>Activo</th>
+        <th>Operaciones</th>
+    </tr>
+    
+    <tr *ngFor="let item of modulos; let i = index">
+        <td>{{i}} - {{item.idModulo}}</td>
+        <td>{{item.descripcion}}</td>
+        <td>{{item.activo}}</td>
+        <td>
+            <button class="btn btn-primary" (click)='updateModulo(item)'><i class="glyphicon glyphicon-pencil"></i></button>
+            <button class="btn btn-primary" (click)='deleteModulo(item)'><i class="glyphicon glyphicon-remove-sign"></i></button>
+        </td>
+    </tr>
+    
+</table>
