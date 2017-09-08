@@ -1,0 +1,28 @@
+<h2>Aplicaciones</h2>
+
+<kendo-grid [data]="gridData" 
+    [scrollable]="'none'"
+    (edit)="editHandler($event)" 
+    (cancel)="cancelHandler($event)"
+    (save)="saveHandler($event)" 
+    (remove)="removeHandler($event)"
+    (add)="addHandler($event)">
+
+    <!-- add button -->
+    <ng-template kendoGridToolbarTemplate>
+        <button kendoGridAddCommand>Crear nuevo</button>
+    </ng-template>
+
+    <kendo-grid-column field="idAplicacion" title="ID" width="40"></kendo-grid-column>
+    <kendo-grid-column field="descripcion" title="Descripcion" width="250"></kendo-grid-column>
+
+    <kendo-grid-command-column title="Acciones" width="220">
+        <ng-template kendoGridCellTemplate let-isNew="isNew">
+            <button kendoGridEditCommand class="k-primary">Modificar</button>
+            <button kendoGridRemoveCommand>Eliminar</button>
+            <button kendoGridSaveCommand class="k-primary">{{ isNew ? 'Añadir' : 'Guardar' }}</button>
+            <button kendoGridCancelCommand>{{ isNew ? 'Descartar' : 'Cancelar' }}</button>
+        </ng-template>
+    </kendo-grid-command-column>
+    
+</kendo-grid>

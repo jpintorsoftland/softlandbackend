@@ -1,0 +1,34 @@
+<h2>Clientes</h2>
+<kendo-grid [data]="gridData" 
+    [scrollable]="'none'"
+    (edit)="editHandler($event)" 
+    (cancel)="cancelHandler($event)"
+    (save)="saveHandler($event)" 
+    (remove)="removeHandler($event)"
+    (add)="addHandler($event)">
+
+    <ng-template kendoGridToolbarTemplate>
+        <button kendoGridAddCommand>Crear nuevo</button>
+    </ng-template>
+
+    <kendo-grid-column field="idCliente" title="ID" width="40"></kendo-grid-column>
+    <kendo-grid-column field="idProyecto" title="Proyecto" width="40"></kendo-grid-column>
+    <kendo-grid-column field="codigoCliente" title="Código" width="40"></kendo-grid-column>
+    <kendo-grid-column field="nombreCliente" title="Nombre" width="250"></kendo-grid-column>
+
+    <kendo-grid-column field="activo" title="Activo" editor="boolean" width="120">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <input type="checkbox" [checked]="dataItem.activo" disabled/>
+        </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-command-column title="Acciones" width="220">
+            <ng-template kendoGridCellTemplate let-isNew="isNew">
+                <button kendoGridEditCommand class="k-primary">Modificar</button>
+                <button kendoGridRemoveCommand>Eliminar</button>
+                <button kendoGridSaveCommand class="k-primary">{{ isNew ? 'Añadir' : 'Guardar' }}</button>
+                <button kendoGridCancelCommand>{{ isNew ? 'Descartar' : 'Cancelar' }}</button>
+            </ng-template>
+        </kendo-grid-command-column>
+        
+</kendo-grid>

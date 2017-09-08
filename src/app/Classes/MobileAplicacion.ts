@@ -1,6 +1,6 @@
 export class MobileAplicacion{
-    constructor (public IdAplicacion: number,
-                public Descripcion: string){
+    constructor (public idAplicacion: number,
+                public descripcion: string){
 
     }
 }

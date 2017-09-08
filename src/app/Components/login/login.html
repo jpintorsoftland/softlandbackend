@@ -1,0 +1,26 @@
+<div class="col-md-4 col-md-offset-4">
+
+    <form class="k-form" action="form" (ngSubmit)="login()" #f="ngForm" novalidate >
+        
+        <fieldset>
+            <legend class="page-header">
+                <h2>Login <small>INICIAR SESIÓN</small></h2>
+            </legend>
+            <label class="k-form-field">
+                <span>Usuario</span>
+                <input type="text" class="k-textbox" name="username" [(ngModel)]="model.email" #username="ngModel" required />
+            </label>
+            <label class="k-form-field">
+                <span>Password</span>
+                <input type="password" class="k-textbox" name="password" [(ngModel)]="model.password" #password="ngModel" required/>
+            </label>
+        </fieldset>
+    
+        <div class="form-group">
+            <button [disabled]="loading" class="k-button k-primary" [disabled]="!f.valid" >Login</button>
+        </div>
+        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+    
+    </form>
+
+</div>
