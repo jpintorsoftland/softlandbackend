@@ -1,13 +1,21 @@
 <nav class="navbar navbar-default" *ngIf="showMenu()">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Softland Mobile</a>
+            <a class="navbar-brand" href="./">Softland Mobile</a>
         </div>
         <ul class="nav navbar-nav">
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a [routerLink]="['/aplicaciones']">Aplicaciones</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a [routerLink]="['/clientes']">Clientes</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a [routerLink]="['/modulos']">Módulos</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a [routerLink]="['/usuarios']">Usuarios</a></li>
+            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a [routerLink]="['/administradores']">Administradores</a></li>
+            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a [routerLink]="['/aplicaciones']">Aplicaciones</a></li>
+            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a [routerLink]="['/clientes']">Clientes</a></li>
+            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a [routerLink]="['/modulos']">Módulos</a></li>
+            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a [routerLink]="['/usuarios']">Usuarios</a></li>
+            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a [routerLink]="['/licencias']">Licencias</a></li>
         </ul>
 
 

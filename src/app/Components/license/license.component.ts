@@ -1,50 +1,30 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MobileUsuario } from '../../Classes/MobileUsuario';
-import { MobileCliente } from '../../Classes/MobileCliente';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MobileLicencia } from '../../Classes/MobileLicencia';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { State, process } from '@progress/kendo-data-query';
-
-const constForm = dataItem => new FormGroup({
-    'idUsuario': new FormControl(dataItem.idUsuario),
-    'idCliente': new FormControl(dataItem.idCliente),
-    'codigoUsuario': new FormControl(dataItem.codigoUsuario),
-    'codigoCliente': new FormControl(dataItem.codigoCliente),
-    'nombreUsuario': new FormControl(dataItem.nombreUsuario),
-    'email': new FormControl(dataItem.email),
-    'activo': new FormControl(dataItem.activo)
-  });
-
 
 @Component({
     selector: 'app',
-    templateUrl: 'user.html'
+    templateUrl: 'license.html'
 })
-export class UserComponent implements OnInit{
-    @Input() gridData: Array<MobileUsuario>;
-    @Input() clientes: Array<MobileCliente>;
+export class LicenseComponent implements OnInit{
+    @Input() gridData: Array<MobileLicencia>;
 
     //grid
-    public formGroup: any = constForm;
-    
+    public formGroup: FormGroup;
     private editedRowIndex: number;
 
 
     constructor(private servicio: CRUDService, private router: Router){
-        //servicio.urlRequest = environment.urlUsers;
+        servicio.urlRequest = environment.urlLicenses;
     }
 
+
     public ngOnInit(): void{
-      //lista de clientes
-      this.servicio.urlRequest = environment.urlClients;
-      this.getListClientes();
-      
-      this.servicio.urlRequest = environment.urlUsers;
-      //lista de usuarios
       this.getList();
     }
 
@@ -55,12 +35,9 @@ export class UserComponent implements OnInit{
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
-          //'idUsuario': new FormControl(0),
-          'idCliente': new FormControl(1),
-          'codigoUsuario': new FormControl(""),
+          //'idCliente': new FormControl(0),
+          'idProyecto': new FormControl(0),
           'codigoCliente': new FormControl(""),
-          'nombreUsuario': new FormControl(""),
-          'email': new FormControl(""),
           'activo': new FormControl(true)
       });
       sender.addRow(this.formGroup);
@@ -69,13 +46,12 @@ export class UserComponent implements OnInit{
     protected editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
+      let controlId = new FormControl(dataItem.idCliente);
       this.formGroup = new FormGroup({
-          'idUsuario': new FormControl(dataItem.idUsuario),
-          'idCliente': new FormControl(dataItem.idCliente),
-          'codigoUsuario': new FormControl(dataItem.codigoUsuario),
+          'idCliente': controlId,
+          'idProyecto': new FormControl(dataItem.idProyecto, Validators.required),
           'codigoCliente': new FormControl(dataItem.codigoCliente),
-          'nombreUsuario': new FormControl(dataItem.nombreUsuario),
-          'email': new FormControl(dataItem.email),
+          'fechaInicio': new FormControl(dataItem.fechaInicio),
           'activo': new FormControl(dataItem.activo, Validators.required)
       });
 
@@ -112,7 +88,7 @@ export class UserComponent implements OnInit{
     }
 
     protected saveHandler({sender, rowIndex, formGroup, isNew}) {
-      const dataItem: MobileUsuario = formGroup.value;
+      const dataItem: MobileLicencia = formGroup.value;
 
       if(isNew){
         this.servicio.add(dataItem).subscribe(data => {
@@ -122,7 +98,7 @@ export class UserComponent implements OnInit{
               this.router.navigate(["/login"]);
         });
       }else{
-        this.servicio.update(dataItem, dataItem.idUsuario).subscribe(data => {
+        this.servicio.update(dataItem, dataItem.idCliente).subscribe(data => {
             this.getList();
         }, e =>{
             sessionStorage.removeItem("token");
@@ -134,32 +110,13 @@ export class UserComponent implements OnInit{
     }
 
     protected removeHandler({dataItem}) {
-        this.servicio.delete(dataItem, dataItem.idUsuario).subscribe(data => {
+        this.servicio.delete(dataItem, dataItem.idCliente).subscribe(data => {
             this.getList();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
         });
     }
-
-    public getListClientes(): void{
-      this.servicio.getList().subscribe(data => {
-        this.clientes = data;
-      }, e => {
-        sessionStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      });
-
-    }
-
-    public buscarCliente(id: number): any{
-      if(this.clientes.length>0){
-        return this.clientes.find(x => x.idCliente === id);
-      }else{
-        return new MobileCliente(0, 0, "", "", true);
-      }
-    }
-    
     /***************************************************************************/
 
 }

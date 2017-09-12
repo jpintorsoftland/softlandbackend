@@ -6,6 +6,7 @@
 export const environment = {
   production: false,
   apiURL: "http://softlandcloudbackendcert.azurewebsites.net/api/",
+  urlAdmins: "admin/administradores",
   urlApps: "aplicaciones",
   urlClients: "clientes",
   urlCompanies: "empresas",
