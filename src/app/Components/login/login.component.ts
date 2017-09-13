@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../Services/AuthService/AuthService';
 import { MobileUsuario} from '../../Classes/MobileUsuario';
 
-//import { crypto} from 'crypto-browserify';
+//import { sha1 } from 'crypto-js/sha1';
 
 @Component({
     moduleId: module.id,
@@ -25,9 +25,11 @@ export class LoginComponent implements OnInit{
 
     login(){
         this.loading = true;
-        //this.model.password = crypto.SHA1(this.model.password);
+        //let pass = sha1("1231");
+        //let user = new MobileUsuario(0, 0, '', '', '', this.model.email, sha1(this.model.password), true );
+        let user = new MobileUsuario(0, 0, '', '', '', this.model.email, this.model.password, true );
 
-        this.authentificationService.login(this.model)
+        this.authentificationService.login(user)
             .subscribe(result => {
                     console.log("result: " + result);
                     if(result === true) {
