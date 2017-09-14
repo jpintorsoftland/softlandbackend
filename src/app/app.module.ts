@@ -1,14 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
-
-import { sha1 } from 'crypto-js/sha1';
 
 //componnents
 import { LoginComponent } from './Components/login/login.component';
@@ -19,7 +18,10 @@ import { ApplicationComponent } from './Components/application/application.compo
 import { ClientComponent } from './Components/client/client.component';
 import { ModuleComponent } from './Components/module/module.component';
 import { UserComponent } from './Components/user/user.component';
+import { ProjectComponent } from './Components/project/project.component';
 import { LicenseComponent } from './Components/license/license.component';
+import { InstanceComponent } from './Components/instance/instance.component';
+import { CompanyComponent } from './Components/company/company.component';
 
 //services
 import { CRUDService } from './Services/CRUDService/CRUDService';
@@ -27,6 +29,9 @@ import { AuthService } from './Services/AuthService/AuthService';
 //routing
 import { Routing } from './Routes/app-routing';
 import { AuthGuard } from './Guards/auth-guard';
+
+
+import { sha1 } from 'sha1/sha1';
 
 
 @NgModule({
@@ -39,13 +44,18 @@ import { AuthGuard } from './Guards/auth-guard';
       ClientComponent,
       ModuleComponent,
       UserComponent,
-      LicenseComponent
+      LicenseComponent,
+      ProjectComponent,
+      InstanceComponent,
+      CompanyComponent
+      //sha1
   ],
   imports: [
       BrowserModule,
-      FormsModule,
       HttpModule,
       BrowserAnimationsModule,
+      FormsModule,
+      ReactiveFormsModule,
       Routing,
       ButtonsModule,
       GridModule,

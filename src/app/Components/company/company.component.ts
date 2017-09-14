@@ -1,11 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MobileLicencia } from '../../Classes/MobileLicencia';
+import { MobileEmpresa } from '../../Classes/MobileEmpresa';
 import { MobileCliente } from '../../Classes/MobileCliente';
 import { MobileInstancia } from '../../Classes/MobileInstancia';
-import { MobileEmpresa } from '../../Classes/MobileEmpresa';
-import { MobileModulo } from '../../Classes/MobileModulo';
-import { MobileTipoPermiso } from '../../Classes/MobileTipoPermiso';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
@@ -14,15 +11,12 @@ import { State, process } from '@progress/kendo-data-query';
 
 @Component({
     selector: 'app',
-    templateUrl: 'license.html'
+    templateUrl: 'company.html'
 })
-export class LicenseComponent implements OnInit{
-    @Input() gridData: Array<MobileLicencia>;
+export class CompanyComponent implements OnInit{
+    @Input() gridData: Array<MobileEmpresa>;
     @Input() clientes: Array<MobileCliente>;
     @Input() instancias: Array<MobileInstancia>;
-    @Input() empresas: Array<MobileEmpresa>;
-    @Input() modulos: Array<MobileModulo>;
-    @Input() tipos_permiso: Array<MobileTipoPermiso>;
 
     //grid
     public formGroup: FormGroup;
@@ -40,24 +34,12 @@ export class LicenseComponent implements OnInit{
         this.servicio.urlRequest = environment.urlClients;
         this.getListClientes();
 
-        //lista de empresas
-        this.servicio.urlRequest = environment.urlCompanies;
-        this.getlistEmpresas();
-
         //lista de instancias
         this.servicio.urlRequest = environment.urlInstances;
         this.getListInstancias();
-
-        //lista de modulos
-        this.servicio.urlRequest = environment.urlModules;
-        this.getListModulos();
-
-        //lista de tipos permisos
-        this.servicio.urlRequest = environment.urlPermissions;
-        this.getListTiposPermisos();
         
-        //lista de licencias
-        this.servicio.urlRequest = environment.urlLicenses;
+        //lista de empresas
+        this.servicio.urlRequest = environment.urlCompanies;
         this.getList();
     }
 
@@ -68,19 +50,13 @@ export class LicenseComponent implements OnInit{
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
-          //'idLicencia': new FormControl(0),
-          'idCliente': new FormControl(0),
-          'idEmpresa': new FormControl(0),
-          'idInstancia': new FormControl(0),
-          'idModulo': new FormControl(0),
-          'idTipoPermiso': new FormControl(0),
-          'codigoCliente': new FormControl(""),
-          'codigoEmpresa': new FormControl(""),
-          'codigoInstancia': new FormControl(""),
-          'codigoLicencia': new FormControl(""),
-          'fechaInicio': new FormControl(Date()),
-          'fechaFin': new FormControl(Date()),
-          'caduca': new FormControl(true),
+          //'idEmpresa': new FormControl(0),
+          'idInstancia': new FormControl("", Validators.required),
+          'idCliente': new FormControl("", Validators.required),
+          'codigoEmpresa': new FormControl("", Validators.required),
+          'codigoInstancia': new FormControl("", Validators.required),
+          'codigoCliente': new FormControl("", Validators.required),
+          'nombreEmpresa': new FormControl("", Validators.required),
           'activo': new FormControl(true)
       });
       sender.addRow(this.formGroup);
@@ -89,21 +65,17 @@ export class LicenseComponent implements OnInit{
     protected editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
-      let controlId = new FormControl(dataItem.idLicencia);
+      let controlId = new FormControl(dataItem.idEmpresa);
+      controlId.disable();
+      this.idEdited = dataItem.idEmpresa;
       this.formGroup = new FormGroup({
-          'idLicencia': controlId,
-          'idCliente': new FormControl(dataItem.idCliente, Validators.required),
-          'idEmpresa': new FormControl(dataItem.idEmpresa, Validators.required),
+          'idEmpresa': controlId,
           'idInstancia': new FormControl(dataItem.idInstancia, Validators.required),
-          'idModulo': new FormControl(dataItem.idModulo, Validators.required),
-          'idTipoPermiso': new FormControl(dataItem.idTipoPermiso, Validators.required),
-          'codigoCliente': new FormControl(dataItem.codigoCliente, Validators.required),
+          'idCliente': new FormControl(dataItem.idCliente, Validators.required),
           'codigoEmpresa': new FormControl(dataItem.codigoEmpresa, Validators.required),
           'codigoInstancia': new FormControl(dataItem.codigoInstancia, Validators.required),
-          'codigoLicencia': new FormControl(dataItem.codigoLicencia, Validators.required),
-          'fechaInicio': new FormControl(dataItem.fechaInicio, Validators.required),
-          'fechaFin': new FormControl(dataItem.fechaFin, Validators.required),
-          'caduca': new FormControl(dataItem.caduca, Validators.required),
+          'codigoCliente': new FormControl(dataItem.codigoCliente, Validators.required),
+          'nombreEmpresa': new FormControl(dataItem.nombreEmpresa, Validators.required),
           'activo': new FormControl(dataItem.activo, Validators.required)
       });
 
@@ -140,7 +112,8 @@ export class LicenseComponent implements OnInit{
     }
 
     protected saveHandler({sender, rowIndex, formGroup, isNew}) {
-      const dataItem: MobileLicencia = formGroup.value;
+      const dataItem: MobileEmpresa = formGroup.value;
+
 
       if(isNew){
         this.servicio.add(dataItem).subscribe(data => {
@@ -150,7 +123,8 @@ export class LicenseComponent implements OnInit{
               this.router.navigate(["/login"]);
         });
       }else{
-        this.servicio.update(dataItem, dataItem.idLicencia).subscribe(data => {
+        dataItem.idEmpresa = this.idEdited;
+        this.servicio.update(dataItem, dataItem.idEmpresa).subscribe(data => {
             this.getList();
         }, e =>{
             sessionStorage.removeItem("token");
@@ -162,7 +136,7 @@ export class LicenseComponent implements OnInit{
     }
 
     protected removeHandler({dataItem}) {
-        this.servicio.delete(dataItem, dataItem.idLicencia).subscribe(data => {
+        this.servicio.delete(dataItem, dataItem.idEmpresa).subscribe(data => {
             this.getList();
         }, e =>{
             sessionStorage.removeItem("token");
@@ -170,7 +144,6 @@ export class LicenseComponent implements OnInit{
         });
     }
 
-    //clientes
     public getListClientes(): void{
       this.servicio.getList().subscribe(data => {
         this.clientes = data;
@@ -191,7 +164,7 @@ export class LicenseComponent implements OnInit{
       }
     }
 
-    //instancias
+
     public getListInstancias(): void{
         this.servicio.getList().subscribe(data => {
           this.instancias = data;
@@ -211,72 +184,6 @@ export class LicenseComponent implements OnInit{
           }
         }
       }
-
-
-    //modulos
-    public getListModulos(): void{
-      this.servicio.getList().subscribe(data => {
-        this.modulos = data;
-      }, e => {
-        sessionStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      });
-
-    }
-
-    public buscarModulo(id: number): any{
-      if(this.modulos!=null){
-        if(this.modulos.length>0){
-          return this.modulos.find(x => x.idModulo === id);
-        }else{
-          return new MobileModulo(0, "", true);
-        }
-      }
-    }
-
-
-    //empresas
-    public getlistEmpresas(): void{
-      this.servicio.getList().subscribe(data => {
-        this.empresas = data;
-      }, e => {
-        sessionStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      });
-
-    }
-
-    public buscarEmpresa(id: number): any{
-      if(this.empresas!=null){
-        if(this.empresas.length>0){
-          return this.empresas.find(x => x.idEmpresa === id);
-        }else{
-          return new MobileEmpresa(0, 0, 0, "", "", "", "", true);
-        }
-      }
-    }
-
-
-    //tipos_permisos
-    public getListTiposPermisos(): void{
-      this.servicio.getList().subscribe(data => {
-        this.tipos_permiso = data;
-      }, e => {
-        sessionStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      });
-
-    }
-
-    public buscarTipoPermiso(id: number): any{
-      if(this.tipos_permiso!=null){
-        if(this.tipos_permiso.length>0){
-          return this.tipos_permiso.find(x => x.idTipoPermiso === id);
-        }else{
-          return new MobileTipoPermiso(0, "");
-        }
-      }
-    }
     /***************************************************************************/
 
 }
