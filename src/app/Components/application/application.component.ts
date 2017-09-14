@@ -17,6 +17,7 @@ export class ApplicationComponent implements OnInit{
     //grid
     public formGroup: FormGroup;
     private editedRowIndex: number;
+    public idEdited: number;
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -45,7 +46,8 @@ export class ApplicationComponent implements OnInit{
       this.closeEditor(sender);
 
       let controlId = new FormControl(dataItem.idAplicacion);
-      //controlId.disable();
+      controlId.disable();
+      this.idEdited = dataItem.idAplicacion;
       this.formGroup = new FormGroup({
           'idAplicacion': controlId,
           'descripcion': new FormControl(dataItem.descripcion, Validators.required)
@@ -94,6 +96,7 @@ export class ApplicationComponent implements OnInit{
               this.router.navigate(["/login"]);
         });
       }else{
+        dataItem.idAplicacion = this.idEdited;
         this.servicio.update(dataItem, dataItem.idAplicacion).subscribe(data => {
             this.getList();
         }, e =>{

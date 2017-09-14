@@ -17,6 +17,7 @@ export class ModuleComponent {
     //grid
     public formGroup: FormGroup;
     private editedRowIndex: number;
+    public idEdited: number;
 
     constructor(private servicio: CRUDService, private router: Router){
         servicio.urlRequest = environment.urlModules;
@@ -43,8 +44,11 @@ export class ModuleComponent {
     protected editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
+      let controlId = new FormControl(dataItem.idModulo);
+      controlId.disable();
+      this.idEdited = dataItem.idModulo;
       this.formGroup = new FormGroup({
-          'idModulo': new FormControl(dataItem.idModulo),
+          'idModulo': controlId,
           'descripcion': new FormControl(dataItem.descripcion, Validators.required),
           'activo': new FormControl(dataItem.activo, Validators.required)
       });
@@ -92,6 +96,7 @@ export class ModuleComponent {
               this.router.navigate(["/login"]);
         });
       }else{
+        dataItem.idModulo = this.idEdited;
         this.servicio.update(dataItem, dataItem.idModulo).subscribe(data => {
             this.getList();
         }, e =>{

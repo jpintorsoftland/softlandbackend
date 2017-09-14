@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../Services/AuthService/AuthService';
 import { MobileUsuario} from '../../Classes/MobileUsuario';
 
-//import { sha1 } from 'crypto-js/sha1';
+//import { sha1 } from 'sha1/sha1';
 
 @Component({
     moduleId: module.id,

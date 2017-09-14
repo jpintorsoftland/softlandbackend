@@ -1,4 +1,4 @@
-<h2>Aplicaciones</h2>
+<h2>Administradores</h2>
 
 <kendo-grid [data]="gridData" 
     [scrollable]="'none'"
@@ -14,9 +14,31 @@
     </ng-template>
 
     <kendo-grid-column field="idAdmin" title="ID" width="40"></kendo-grid-column>
-    <kendo-grid-column field="nombreAdmin" title="Descripcion" width="200"></kendo-grid-column>
-    <kendo-grid-column field="email" title="Descripcion" width="200"></kendo-grid-column>
-    <kendo-grid-column field="idRolAdmin" title="Descripcion" width="80"></kendo-grid-column>
+    <kendo-grid-column field="nombreAdmin" title="Nombre Admin" width="200"></kendo-grid-column>
+    <kendo-grid-column field="email" title="Email" width="200"></kendo-grid-column>
+    <kendo-grid-column field="idRolAdmin" title="Rol" width="120">
+
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{buscarRoles(dataItem.idRolAdmin)?.descripcion}}
+        </ng-template>
+       
+        <ng-template kendoGridEditTemplate
+            let-dataItem="dataItem"
+            let-formGroup="formGroup">
+            
+            <kendo-dropdownlist
+                [data]="roles"
+                name="roles"
+                textField="descripcion"
+                valueField="idRolAdmin"
+                [valuePrimitive]="true"
+                [(ngModel)]="dataItem.idRolAdmin"
+                [formControl]="formGroup.get('idRolAdmin')" >
+            </kendo-dropdownlist>
+            
+        </ng-template>
+
+    </kendo-grid-column>
 
     <kendo-grid-command-column title="Acciones" width="220">
         <ng-template kendoGridCellTemplate let-isNew="isNew">

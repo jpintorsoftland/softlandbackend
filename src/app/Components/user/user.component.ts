@@ -9,16 +9,6 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { State, process } from '@progress/kendo-data-query';
 
-const constForm = dataItem => new FormGroup({
-    'idUsuario': new FormControl(dataItem.idUsuario),
-    'idCliente': new FormControl(dataItem.idCliente),
-    'codigoUsuario': new FormControl(dataItem.codigoUsuario),
-    'codigoCliente': new FormControl(dataItem.codigoCliente),
-    'nombreUsuario': new FormControl(dataItem.nombreUsuario),
-    'email': new FormControl(dataItem.email),
-    'activo': new FormControl(dataItem.activo)
-  });
-
 
 @Component({
     selector: 'app',
@@ -29,9 +19,9 @@ export class UserComponent implements OnInit{
     @Input() clientes: Array<MobileCliente>;
 
     //grid
-    public formGroup: any = constForm;
-    
+    public formGroup: FormGroup;
     private editedRowIndex: number;
+    public idEdited: number;
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -69,14 +59,18 @@ export class UserComponent implements OnInit{
     protected editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
+      
+      let controlId = new FormControl(dataItem.idUsuario);
+      controlId.disable();
+      this.idEdited = dataItem.idUsuario;
       this.formGroup = new FormGroup({
-          'idUsuario': new FormControl(dataItem.idUsuario),
-          'idCliente': new FormControl(dataItem.idCliente),
-          'codigoUsuario': new FormControl(dataItem.codigoUsuario),
-          'codigoCliente': new FormControl(dataItem.codigoCliente),
-          'nombreUsuario': new FormControl(dataItem.nombreUsuario),
-          'email': new FormControl(dataItem.email),
-          'activo': new FormControl(dataItem.activo, Validators.required)
+        'idUsuario': new FormControl(dataItem.idUsuario),
+        'idCliente': new FormControl(dataItem.idCliente),
+        'codigoUsuario': new FormControl(dataItem.codigoUsuario),
+        'codigoCliente': new FormControl(dataItem.codigoCliente),
+        'nombreUsuario': new FormControl(dataItem.nombreUsuario),
+        'email': new FormControl(dataItem.email),
+        'activo': new FormControl(dataItem.activo)
       });
 
       this.editedRowIndex = rowIndex;
@@ -122,6 +116,7 @@ export class UserComponent implements OnInit{
               this.router.navigate(["/login"]);
         });
       }else{
+        dataItem.idUsuario = this.idEdited;
         this.servicio.update(dataItem, dataItem.idUsuario).subscribe(data => {
             this.getList();
         }, e =>{
@@ -153,11 +148,16 @@ export class UserComponent implements OnInit{
     }
 
     public buscarCliente(id: number): any{
-      if(this.clientes.length>0){
-        return this.clientes.find(x => x.idCliente === id);
-      }else{
-        return new MobileCliente(0, 0, "", "", true);
+      if(this.clientes!=null){
+
+        if(this.clientes.length>0){
+          return this.clientes.find(x => x.idCliente === id);
+        }else{
+          return new MobileCliente(0, 0, "", "", true);
+        }
+        
       }
+
     }
     
     /***************************************************************************/

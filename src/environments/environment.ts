@@ -13,5 +13,8 @@ export const environment = {
   urlInstances: "instancias",
   urlLicenses: "licencias",
   urlModules: "modulos",
+  urlPermissions: "tipos_permisos",
+  urlProjects: "proyectos",
+  urlRoles: "admin/roles",
   urlUsers: "usuarios"
 };

@@ -12,15 +12,104 @@
     </ng-template>
 
     <kendo-grid-column field="idLicencia" title="ID" width="40"></kendo-grid-column>
-    <kendo-grid-column field="idCliente" title="Cliente" width="40"></kendo-grid-column>
-    <kendo-grid-column field="idEmpresa" title="Empresa" width="40"></kendo-grid-column>
-    <kendo-grid-column field="idInstancia" title="Instancia" width="40"></kendo-grid-column>
-    <kendo-grid-column field="idModulo" title="Modulo" width="40"></kendo-grid-column>
-    <kendo-grid-column field="idTipoPermiso" title="Permiso" width="40"></kendo-grid-column>
-    <kendo-grid-column field="codigoLicencia" title="Cod Licencia" width="40"></kendo-grid-column>
-    <kendo-grid-column field="codigoInstancia" title="Cod Instancia" width="40"></kendo-grid-column>
-    <kendo-grid-column field="codigoCliente" title="Cod Cliente" width="40"></kendo-grid-column>
-    <kendo-grid-column field="codigoEmpresa" title="Cod Empresa" width="40"></kendo-grid-column>
+    
+    <kendo-grid-column field="idCliente" title="Cliente" width="150">
+        <ng-template kendoGridCellTemplate let-dataItem>
+                {{buscarCliente(dataItem.idCliente)?.nombreCliente}}
+            </ng-template>
+            <ng-template kendoGridEditTemplate
+            let-dataItem="dataItem"
+            let-formGroup="formGroup">
+            <kendo-dropdownlist
+                [data]="clientes"
+                textField="nombreCliente"
+                valueField="idCliente"
+                [valuePrimitive]="true"
+                [(ngModel)]="dataItem.idCliente"
+                [formControl]="formGroup.get('idCliente')">
+            </kendo-dropdownlist>
+        </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="idEmpresa" title="Empresa" width="150">
+        <ng-template kendoGridCellTemplate let-dataItem>
+                {{buscarEmpresa(dataItem.idEmpresa)?.nombreEmpresa}}
+            </ng-template>
+            <ng-template kendoGridEditTemplate
+            let-dataItem="dataItem"
+            let-formGroup="formGroup">
+            <kendo-dropdownlist
+                [data]="empresas"
+                textField="nombreEmpresa"
+                valueField="idEmpresa"
+                [valuePrimitive]="true"
+                [(ngModel)]="dataItem.idEmpresa"
+                [formControl]="formGroup.get('idEmpresa')"
+            >
+            </kendo-dropdownlist>
+        </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="idInstancia" title="Instancia" width="150">
+        <ng-template kendoGridCellTemplate let-dataItem>
+                {{buscarInstancia(dataItem.idInstancia)?.nombreInstancia}}
+            </ng-template>
+            <ng-template kendoGridEditTemplate
+            let-dataItem="dataItem"
+            let-formGroup="formGroup">
+            <kendo-dropdownlist
+                [data]="instancias"
+                textField="nombreInstancia"
+                valueField="idInstancia"
+                [valuePrimitive]="true"
+                [(ngModel)]="dataItem.idInstancia"
+                [formControl]="formGroup.get('idInstancia')"
+            >
+            </kendo-dropdownlist>
+        </ng-template>
+    </kendo-grid-column>
+
+
+    <kendo-grid-column field="idModulo" title="Modulo" width="150">
+        <ng-template kendoGridCellTemplate let-dataItem>
+                {{buscarModulo(dataItem.idModulo)?.descripcion}}
+            </ng-template>
+            <ng-template kendoGridEditTemplate
+            let-dataItem="dataItem"
+            let-formGroup="formGroup">
+            <kendo-dropdownlist
+                [data]="modulos"
+                textField="descripcion"
+                valueField="idModulo"
+                [valuePrimitive]="true"
+                [(ngModel)]="dataItem.idModulo"
+                [formControl]="formGroup.get('idModulo')"
+            >
+            </kendo-dropdownlist>
+        </ng-template>
+    </kendo-grid-column>
+
+
+    <kendo-grid-column field="idTipoPermiso" title="Permisos" width="150">
+        <ng-template kendoGridCellTemplate let-dataItem>
+                {{buscarTipoPermiso(dataItem.idTipoPermiso)?.descripcion}}
+            </ng-template>
+            <ng-template kendoGridEditTemplate
+            let-dataItem="dataItem"
+            let-formGroup="formGroup">
+            <kendo-dropdownlist
+                [data]="tipos_permiso"
+                textField="descripcion"
+                valueField="idTipoPermiso"
+                [valuePrimitive]="true"
+                [(ngModel)]="dataItem.idTipoPermiso"
+                [formControl]="formGroup.get('idTipoPermiso')"
+            >
+            </kendo-dropdownlist>
+        </ng-template>
+    </kendo-grid-column>
+    
+
     <kendo-grid-column field="fechaInicio" title="Fecha Inicio" format="{0:d}" width="40"></kendo-grid-column>
     <kendo-grid-column field="fechaFin" title="Fecha Fin" format="{0:d}" width="40" ></kendo-grid-column>
 
