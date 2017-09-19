@@ -22,10 +22,11 @@ export class InstanceComponent implements OnInit{
     public formGroup: FormGroup;
     private editedRowIndex: number;
     public idEdited: number;
+    private idAdmin: number;
 
 
     constructor(private servicio: CRUDService, private router: Router){
-      
+      this.idAdmin = Number( sessionStorage.getItem('idAdmin') );
     }
 
 
@@ -100,7 +101,10 @@ export class InstanceComponent implements OnInit{
     /***************************************************************************/
     //api actions
     public getList(): void{
-      this.servicio.getList().subscribe(data => {
+      let uri  = environment.urlInstancesFilter + "/" + this.idAdmin;
+      let url = this.servicio.getUrl(uri);
+
+      this.servicio.getList(url).subscribe(data => {
         this.gridData = data;
       }, e => {
         sessionStorage.removeItem('token');
@@ -163,7 +167,10 @@ export class InstanceComponent implements OnInit{
     }
 
     public getListClientes(): void{
-      this.servicio.getList().subscribe(data => {
+      let uri  = environment.urlClientsFilter + "/" + this.idAdmin;
+      let url = this.servicio.getUrl(uri);
+
+      this.servicio.getList(url).subscribe(data => {
         this.clientes = data;
       }, e => {
         sessionStorage.removeItem('token');

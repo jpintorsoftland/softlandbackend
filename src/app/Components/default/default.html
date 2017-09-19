@@ -1,27 +1,52 @@
+<!--
 <nav class="navbar navbar-default" *ngIf="showMenu()">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="./">Softland Mobile</a>
+            <a class="navbar-brand" href="./incio">Softland Backend</a>
         </div>
-        <ul class="nav navbar-nav">
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+        <ul class="nav navbar-nav nav-pills">
+
+            <li *ngIf="isSuperAdmin"
+                [routerLinkActive]="['active']"
+                [routerLinkActiveOptions]="{exact:true}">
                 <a [routerLink]="['/administradores']">Administradores</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+
+            <li *ngIf="isSuperAdmin"
+                [routerLinkActive]="['active']" 
+                [routerLinkActiveOptions]="{exact:true}">
                 <a [routerLink]="['/aplicaciones']">Aplicaciones</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+
+            <li *ngIf="isSuperAdmin"
+                [routerLinkActive]="['active']" 
+                [routerLinkActiveOptions]="{exact:true}">
                 <a [routerLink]="['/proyectos']">Proyectos</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+
+            <li *ngIf="isSuperAdmin"
+                [routerLinkActive]="['active']" 
+                [routerLinkActiveOptions]="{exact:true}">
                 <a [routerLink]="['/modulos']">Módulos</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                
+            <li [routerLinkActive]="['active']" 
+                [routerLinkActiveOptions]="{exact:true}">
                 <a [routerLink]="['/clientes']">Clientes</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+
+            <li [routerLinkActive]="['active']" 
+                [routerLinkActiveOptions]="{exact:true}">
                 <a [routerLink]="['/instancias']">Instancias</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-                    <a [routerLink]="['/empresas']">Empresas</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+
+            <li [routerLinkActive]="['active']" 
+                [routerLinkActiveOptions]="{exact:true}">
+                <a [routerLink]="['/empresas']">Empresas</a></li>
+
+            <li [routerLinkActive]="['active']" 
+                [routerLinkActiveOptions]="{exact:true}">
                 <a [routerLink]="['/usuarios']">Usuarios</a></li>
-            <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+
+            <li *ngIf="isConsultant"
+                [routerLinkActive]="['active']" 
+                [routerLinkActiveOptions]="{exact:true}">
                 <a [routerLink]="['/licencias']">Licencias</a></li>
+
         </ul>
 
 
@@ -31,5 +56,96 @@
 
     </div>
 </nav>
-<router-outlet></router-outlet>
+-->
+
+
+<div>
+    <div>
+        <div class="col-sm-3" *ngIf="showMenu()">
+        <div class="sidebar-nav">
+            <div class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <span class="visible-xs navbar-brand">Backend mobile</span>
+            </div>
+            <div class="navbar-collapse collapse sidebar-navbar-collapse">
+                <ul class="nav navbar-nav">
+
+                    <div style="padding: 10px 20px 0px 20px">
+                        <img src="/assets/img/softland_icon.png" class="fillParent">
+                    </div>
+
+                    <hr>
+                    
+                    <li *ngIf="isSuperAdmin"
+                        [routerLinkActive]="['active']"
+                        [routerLinkActiveOptions]="{exact:true}">
+                        <a [routerLink]="['/administradores']">
+                            <i class="fa fa-desktop fa-fw" aria-hidden="true"></i>&nbsp;Administradores</a></li>
+
+                    <li *ngIf="isSuperAdmin"
+                        [routerLinkActive]="['active']" 
+                        [routerLinkActiveOptions]="{exact:true}">
+                        <a [routerLink]="['/aplicaciones']">
+                            <i class="fa fa-mobile fa-fw" aria-hidden="true"></i>&nbsp;Aplicaciones</a></li>
+
+                    <li *ngIf="isSuperAdmin"
+                        [routerLinkActive]="['active']" 
+                        [routerLinkActiveOptions]="{exact:true}">
+                        <a [routerLink]="['/proyectos']">
+                            <i class="fa fa-exchange fa-fw" aria-hidden="true"></i>&nbsp;Proyectos</a></li>
+
+                    <li *ngIf="isSuperAdmin"
+                        [routerLinkActive]="['active']" 
+                        [routerLinkActiveOptions]="{exact:true}">
+                            <a [routerLink]="['/modulos']">
+                                <i class="fa fa-window-restore fa-fw" aria-hidden="true"></i>&nbsp;Módulos</a></li>
+                        
+                    <li [routerLinkActive]="['active']" 
+                        [routerLinkActiveOptions]="{exact:true}">
+                        <a [routerLink]="['/clientes']">
+                            <i class="fa fa-handshake-o fa-fw" aria-hidden="true"></i>&nbsp;Clientes</a></li>
+
+                    <li [routerLinkActive]="['active']" 
+                        [routerLinkActiveOptions]="{exact:true}">
+                        <a [routerLink]="['/instancias']">
+                            <i class="fa fa-database fa-fw" aria-hidden="true"></i>&nbsp;Instancias</a></li>
+
+                    <li [routerLinkActive]="['active']" 
+                        [routerLinkActiveOptions]="{exact:true}">
+                        <a [routerLink]="['/empresas']">
+                            <i class="fa fa-building fa-fw" aria-hidden="true"></i>&nbsp;Empresas</a></li>
+
+                    <li [routerLinkActive]="['active']" 
+                        [routerLinkActiveOptions]="{exact:true}">
+                        <a [routerLink]="['/usuarios']">
+                            <i class="fa fa-user fa-fw" aria-hidden="true"></i>&nbsp;Usuarios</a></li>
+
+                    <li *ngIf="isConsultant"
+                        [routerLinkActive]="['active']" 
+                        [routerLinkActiveOptions]="{exact:true}">
+                        <a [routerLink]="['/licencias']">
+                            <i class="fa fa-unlock-alt fa-fw" aria-hidden="true"></i>&nbsp;Licencias</a></li>
+
+                    <hr>
+                    
+                    <li [routerLinkActive]="['active']" >
+                        <a href="#" (click)="logOut()">
+                            <i class="fa fa-power-off fa-fw" aria-hidden="true"></i>&nbsp;Salir</a></li>
+
+                </ul>
+            </div>
+            </div>
+        </div>
+        </div>
+        <div class="col-sm-9">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
 

@@ -1,4 +1,8 @@
 <h2>Usuarios</h2>
+
+<br>
+
+
 <kendo-grid [data]="gridData" 
     [scrollable]="'none'"
     (edit)="editHandler($event)" 
@@ -43,9 +47,9 @@
 
     <kendo-grid-command-column title="Acciones" width="150">
         <ng-template kendoGridCellTemplate let-isNew="isNew">
-            <button kendoGridEditCommand class="k-primary">Modificar</button>
+            <button kendoGridEditCommand class="k-primary s-button">Modificar</button>
             <button kendoGridRemoveCommand>Eliminar</button>
-            <button kendoGridSaveCommand class="k-primary">{{ isNew ? 'Añadir' : 'Guardar' }}</button>
+            <button kendoGridSaveCommand class="k-primary s-button">{{ isNew ? 'Añadir' : 'Guardar' }}</button>
             <button kendoGridCancelCommand>{{ isNew ? 'Descartar' : 'Cancelar' }}</button>
         </ng-template>
     </kendo-grid-command-column>

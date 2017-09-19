@@ -1,7 +1,11 @@
-<div class="col-md-4 col-md-offset-4">
+<div class="col-md-6 col-md-offset-5">
 
     <form class="k-form" action="form" (ngSubmit)="login()" #f="ngForm" novalidate >
-        
+
+        <div class="center">
+            <img src="/assets/img/softland_icon.png" class="fillParent">
+        </div>
+
         <fieldset>
             <legend class="page-header">
                 <h2>Login <small>INICIAR SESIÓN</small></h2>
@@ -17,7 +21,7 @@
         </fieldset>
     
         <div class="form-group">
-            <button [disabled]="loading" class="k-button k-primary" [disabled]="!f.valid" >Login</button>
+            <button [disabled]="loading" class="k-button k-primary s-button" [disabled]="!f.valid" >Login</button>
         </div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
     

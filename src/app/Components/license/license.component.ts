@@ -11,6 +11,7 @@ import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app',
@@ -28,10 +29,11 @@ export class LicenseComponent implements OnInit{
     public formGroup: FormGroup;
     private editedRowIndex: number;
     public idEdited: number;
+    private idAdmin: number;
 
 
     constructor(private servicio: CRUDService, private router: Router){
-
+      this.idAdmin = Number( sessionStorage.getItem('idAdmin') );
     }
 
 
@@ -78,8 +80,8 @@ export class LicenseComponent implements OnInit{
           'codigoEmpresa': new FormControl(""),
           'codigoInstancia': new FormControl(""),
           'codigoLicencia': new FormControl(""),
-          'fechaInicio': new FormControl(Date()),
-          'fechaFin': new FormControl(Date()),
+          'fechaInicio': new FormControl(Date.now()),
+          'fechaFin': new FormControl(Date.now()),
           'caduca': new FormControl(true),
           'activo': new FormControl(true)
       });
@@ -101,8 +103,8 @@ export class LicenseComponent implements OnInit{
           'codigoEmpresa': new FormControl(dataItem.codigoEmpresa, Validators.required),
           'codigoInstancia': new FormControl(dataItem.codigoInstancia, Validators.required),
           'codigoLicencia': new FormControl(dataItem.codigoLicencia, Validators.required),
-          'fechaInicio': new FormControl(dataItem.fechaInicio, Validators.required),
-          'fechaFin': new FormControl(dataItem.fechaFin, Validators.required),
+          'fechaInicio': new FormControl(dataItem.fechaInicio),
+          'fechaFin': new FormControl(dataItem.fechaFin),
           'caduca': new FormControl(dataItem.caduca, Validators.required),
           'activo': new FormControl(dataItem.activo, Validators.required)
       });
@@ -125,12 +127,18 @@ export class LicenseComponent implements OnInit{
     }
     /***************************************************************************/
     
-
+    public formatDate(myStringDate) {
+      console.log("log " + myStringDate);
+      return  new Date(myStringDate.substr(0, 10) );
+  }
 
     /***************************************************************************/
     //api actions
     public getList(): void{
-      this.servicio.getList().subscribe(data => {
+      let uri  = environment.urlLicensesFilter + "/" + this.idAdmin;
+      let url = this.servicio.getUrl(uri);
+
+      this.servicio.getList(url).subscribe(data => {
         this.gridData = data;
       }, e => {
         sessionStorage.removeItem('token');
@@ -172,7 +180,10 @@ export class LicenseComponent implements OnInit{
 
     //clientes
     public getListClientes(): void{
-      this.servicio.getList().subscribe(data => {
+      let uri  = environment.urlClientsFilter + "/" + this.idAdmin;
+      let url = this.servicio.getUrl(uri);
+
+      this.servicio.getList(url).subscribe(data => {
         this.clientes = data;
       }, e => {
         sessionStorage.removeItem('token');
@@ -193,12 +204,15 @@ export class LicenseComponent implements OnInit{
 
     //instancias
     public getListInstancias(): void{
-        this.servicio.getList().subscribe(data => {
-          this.instancias = data;
-        }, e => {
-          sessionStorage.removeItem('token');
-          this.router.navigate(['/login']);
-        });
+      let uri  = environment.urlInstancesFilter + "/" + this.idAdmin;
+      let url = this.servicio.getUrl(uri);
+    
+      this.servicio.getList(url).subscribe(data => {
+        this.instancias = data;
+      }, e => {
+        sessionStorage.removeItem('token');
+        this.router.navigate(['/login']);
+      });
   
       }
   
@@ -237,7 +251,10 @@ export class LicenseComponent implements OnInit{
 
     //empresas
     public getlistEmpresas(): void{
-      this.servicio.getList().subscribe(data => {
+      let uri  = environment.urlCompaniesFilter + "/" + this.idAdmin;
+      let url = this.servicio.getUrl(uri);
+
+      this.servicio.getList(url).subscribe(data => {
         this.empresas = data;
       }, e => {
         sessionStorage.removeItem('token');

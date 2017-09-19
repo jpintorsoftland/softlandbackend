@@ -1,9 +1,12 @@
+import { DefaultComponent } from './../default/default.component';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Services/AuthService/AuthService';
-import { MobileUsuario} from '../../Classes/MobileUsuario';
+import { CRUDService } from '../../Services/CRUDService/CRUDService';
+import { MobileAdmin} from '../../Classes/MobileAdmin';
+import { environment } from '../../../environments/environment';
 
-//import { sha1 } from 'sha1/sha1';
+import { SHA1 } from 'crypto-js';
 
 @Component({
     moduleId: module.id,
@@ -12,12 +15,13 @@ import { MobileUsuario} from '../../Classes/MobileUsuario';
 })
 
 export class LoginComponent implements OnInit{
-    model: MobileUsuario = new MobileUsuario(0, 0, '', '', '', '', '', false);
+    model: MobileAdmin = new MobileAdmin(0, "", "", "", 0, true);
     error = '';
     loading: boolean = false;
 
     constructor( private router: Router,
-                private authentificationService: AuthService){ }
+                private authentificationService: AuthService,
+                private crudService: CRUDService){ }
 
     ngOnInit(){
         this.authentificationService.logout();
@@ -25,15 +29,16 @@ export class LoginComponent implements OnInit{
 
     login(){
         this.loading = true;
-        //let pass = sha1("1231");
-        //let user = new MobileUsuario(0, 0, '', '', '', this.model.email, sha1(this.model.password), true );
-        let user = new MobileUsuario(0, 0, '', '', '', this.model.email, this.model.password, true );
 
-        this.authentificationService.login(user)
+        let pass = SHA1(this.model.password).toString();
+
+        let admin = new MobileAdmin(0, "", this.model.email, pass, 0, true );
+
+        this.authentificationService.login(admin)
             .subscribe(result => {
-                    console.log("result: " + result);
                     if(result === true) {
-                        this.router.navigate(['/']);
+                        //this.router.navigate(['/']);
+                        this.logadmin(admin);
                     } else {
                         this.error = "Datos de acceso incorrectos";
                         this.loading = false;
@@ -42,6 +47,34 @@ export class LoginComponent implements OnInit{
                     this.error = 'Datos de acceso incorrectos';
                     this.loading = false;
             });
+    }
+
+    logadmin(admin){
+        this.crudService.urlRequest = environment.urlLogin;
+        this.crudService.add(admin)
+            .subscribe(result => {
+                
+                if(result === false){
+                    this.error = "Datos de acceso incorrectos";
+                    this.loading = false;
+                }else{
+                    sessionStorage.setItem('idRolAdmin', result.idRolAdmin);
+                    sessionStorage.setItem('idAdmin', result.idAdmin);
+                    sessionStorage.setItem('email', result.email);
+                    sessionStorage.setItem('password', result.password);
+
+                    this.router.navigate(['/']);
+                   
+                }
+            }, e => {
+                    this.error = 'Datos de acceso incorrectos';
+                    this.loading = false;
+                    this.removeToken();
+            });
+    }
+
+    removeToken(){
+        sessionStorage.removeItem("token");
     }
 
 }

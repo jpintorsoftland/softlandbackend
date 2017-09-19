@@ -7,38 +7,38 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class CRUDService{
     private apiUrl = environment.apiURL;
-    public urlRequest = environment.urlClients;
+    public urlRequest = "";
 
     constructor(private http: Http){
     }
 
     /***************************************************************************/
     //CRUD
-    getList(): Observable<any[]>{
-        return this.http.get(this.getUrl(this.urlRequest), this.getOptions() ).map(this.getDatos).catch(this.error);
+    getList(url : string = this.getUrl(this.urlRequest) ): Observable<any[]>{
+        return this.http.get(url, this.getOptions() ).map(this.getDatos).catch(this.error);
     }
 
-    getItemById(model: any, id: any): Observable<any[]>{
-        return this.http.get(this.getUrl(this.urlRequest) + '/' + id, this.getOptions() ).map(this.getDatos).catch(this.error);
+    getItemById(model: any, id: any, url : string = this.getUrl(this.urlRequest) ): Observable<any[]>{
+        return this.http.get(url + '/' + id, this.getOptions() ).map(this.getDatos).catch(this.error);
     }
 
-    add(model: any): Observable<any> { 
-        return this.http.post(this.getUrl(this.urlRequest), model, this.getOptions() ).map(this.getDatos).catch(this.error);
+    add(model: any, url : string = this.getUrl(this.urlRequest) ): Observable<any> { 
+        return this.http.post(url, model, this.getOptions() ).map(this.getDatos).catch(this.error);
     }
 
-    delete(model: any, id: any) { 
-        return this.http.delete(this.getUrl(this.urlRequest) + '/' + id, this.getOptions() ).catch(this.error);
+    delete(model: any, id: any, url : string = this.getUrl(this.urlRequest) ) { 
+        return this.http.delete(url + '/' + id, this.getOptions() ).catch(this.error);
     }
 
-    update(model: any, id: any) { 
-        return this.http.put(this.getUrl(this.urlRequest) + '/' + id, model, this.getOptions() ).catch(this.error);
+    update(model: any, id: any, url : string = this.getUrl(this.urlRequest) ) { 
+        return this.http.put(url + '/' + id, model, this.getOptions() ).catch(this.error);
     }
     /***************************************************************************/
 
 
     /***************************************************************************/
     //request build
-    private getUrl(route: string){
+    public getUrl(route: string){
         return this.apiUrl + route;
     }
 

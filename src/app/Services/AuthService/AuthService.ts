@@ -2,19 +2,18 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import '../../rxjs/index';
-import { MobileUsuario } from '../../Classes/MobileUsuario';
+import { MobileAdmin } from '../../Classes/MobileAdmin';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class AuthService{
-    private apiUrl = "http://softlandcloudbackendcert.azurewebsites.net/api/";
+    private apiUrl  = environment.apiURL;
 
     constructor(private http: Http){}
 
 
-    login(usuario: MobileUsuario): Observable<boolean> { 
-        let body = 'Email=' + usuario.email + '&Password=' + usuario.password;
-
-        console.log("body: " + body);
+    login(admin: MobileAdmin): Observable<boolean> { 
+        let body = 'Email=' + admin.email + '&Password=' + admin.password;
 
         let headers = new Headers({ 'Content-type': 'application/x-www-form-urlencoded'});
         let options = new RequestOptions({ 'headers': headers }); 
@@ -24,6 +23,10 @@ export class AuthService{
 
     logout(): void{
         sessionStorage.removeItem('token');
+        sessionStorage.removeItem('idAdmin');
+        sessionStorage.removeItem('idRolAdmin');
+        sessionStorage.removeItem('email');
+        sessionStorage.removeItem('password');
     }
 
     private error(error: any){

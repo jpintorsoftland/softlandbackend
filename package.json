@@ -32,11 +32,14 @@
     "@progress/kendo-data-query": "^1.0.7",
     "@progress/kendo-drawing": "^1.2.1",
     "@progress/kendo-theme-default": "^2.41.0",
+    "@types/crypto-js": "^3.1.35",
     "bootstrap-sass": "^3.3.7",
     "core-js": "^2.4.1",
     "crypto-js": "^3.1.9-1",
+    "font-awesome": "^4.7.0",
+    "js-sha1": "^0.4.1",
+    "jshashes": "^1.0.7",
     "rxjs": "^5.4.2",
-    "sha1": "^1.1.1",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {

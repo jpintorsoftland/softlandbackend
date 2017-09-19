@@ -22,10 +22,12 @@ export class UserComponent implements OnInit{
     public formGroup: FormGroup;
     private editedRowIndex: number;
     public idEdited: number;
+    private idAdmin: number;
 
 
     constructor(private servicio: CRUDService, private router: Router){
         //servicio.urlRequest = environment.urlUsers;
+        this.idAdmin = Number( sessionStorage.getItem('idAdmin') );
     }
 
     public ngOnInit(): void{
@@ -96,7 +98,10 @@ export class UserComponent implements OnInit{
     /***************************************************************************/
     //api actions
     public getList(): void{
-      this.servicio.getList().subscribe(data => {
+      let uri  = environment.urlUsersFilter + "/" + this.idAdmin;
+      let url = this.servicio.getUrl(uri);
+
+      this.servicio.getList(url).subscribe(data => {
         this.gridData = data;
       }, e => {
         sessionStorage.removeItem('token');
@@ -138,7 +143,10 @@ export class UserComponent implements OnInit{
     }
 
     public getListClientes(): void{
-      this.servicio.getList().subscribe(data => {
+      let uri  = environment.urlClientsFilter + "/" + this.idAdmin;
+      let url = this.servicio.getUrl(uri);
+
+      this.servicio.getList(url).subscribe(data => {
         this.clientes = data;
       }, e => {
         sessionStorage.removeItem('token');

@@ -8,16 +8,44 @@ import { Router } from '@angular/router';
 })
 
 export class DefaultComponent{
+    public isSuperAdmin: boolean;
+    public isConsultant: boolean;
+    public isLoged: boolean;
         
     constructor(private router: Router){
-        
+        this.isLoged = false;
+    }
+
+    ngOnInit(){
+
     }
 
     showMenu() {
-        if (sessionStorage.getItem('token')) {
+        if (sessionStorage.getItem('idRolAdmin')) {
+            if(!this.isLoged)this.showOptions();
             return true;
+        }else{
+            this.isLoged = false;
+            return false;
         }
-        return false;
+    }
+
+    showOptions(){
+        this.isLoged = true;
+        let idRolAdmin = sessionStorage.getItem('idRolAdmin');
+
+        this.isSuperAdmin = false;
+        this.isConsultant = false;
+        switch(idRolAdmin){
+            case "1":
+                this.isSuperAdmin = true;
+                this.isConsultant = true;
+                break;
+            case "2":
+                this.isConsultant = true;
+                break;
+        }
+
     }
 
     logOut(){

@@ -29,10 +29,8 @@ import { AuthService } from './Services/AuthService/AuthService';
 //routing
 import { Routing } from './Routes/app-routing';
 import { AuthGuard } from './Guards/auth-guard';
-
-
-import { sha1 } from 'sha1/sha1';
-
+import { SuperAdminGuard } from "./Guards/superadmin-guard";
+import { ConsultantGuard } from "./Guards/consultant-guard";
 
 @NgModule({
   declarations: [
@@ -48,7 +46,6 @@ import { sha1 } from 'sha1/sha1';
       ProjectComponent,
       InstanceComponent,
       CompanyComponent
-      //sha1
   ],
   imports: [
       BrowserModule,
@@ -64,7 +61,9 @@ import { sha1 } from 'sha1/sha1';
   providers: [ 
       CRUDService,
       AuthService, 
-      AuthGuard 
+      AuthGuard,
+      SuperAdminGuard,
+      ConsultantGuard 
     ],
   bootstrap: 
     [ 

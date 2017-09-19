@@ -10,20 +10,23 @@ import { ProjectComponent } from "../Components/project/project.component";
 import { LicenseComponent } from "../Components/license/license.component";
 import { InstanceComponent } from '../Components/instance/instance.component';
 import { CompanyComponent } from '../Components/company/company.component';
+
 import { AuthGuard } from "../Guards/auth-guard";
+import { SuperAdminGuard } from "../Guards/superadmin-guard";
+import { ConsultantGuard } from "../Guards/consultant-guard";
 
 const appRoutes: Routes = [
     { path: "login", component: LoginComponent },
     { path: "", component: AppComponent, canActivate: [AuthGuard] },
-    { path: "administradores", component: AdminComponent, canActivate: [AuthGuard] },
-    { path: "aplicaciones", component: ApplicationComponent, canActivate: [AuthGuard] },
+    { path: "administradores", component: AdminComponent, canActivate: [AuthGuard, SuperAdminGuard] },
+    { path: "aplicaciones", component: ApplicationComponent, canActivate: [AuthGuard, SuperAdminGuard] },
     { path: "clientes", component: ClientComponent, canActivate: [AuthGuard] },
     { path: "instancias", component: InstanceComponent, canActivate: [AuthGuard] },
     { path: "empresas", component: CompanyComponent, canActivate: [AuthGuard] },
-    { path: "modulos", component: ModuleComponent, canActivate: [AuthGuard] },
+    { path: "modulos", component: ModuleComponent, canActivate: [AuthGuard, SuperAdminGuard] },
     { path: "usuarios", component: UserComponent, canActivate: [AuthGuard] },
     { path: "proyectos", component: ProjectComponent, canActivate: [AuthGuard] },
-    { path: "licencias", component: LicenseComponent, canActivate: [AuthGuard] },
+    { path: "licencias", component: LicenseComponent, canActivate: [AuthGuard, ConsultantGuard] },
     { path: "**", redirectTo: ""}
 ];
 
