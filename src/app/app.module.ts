@@ -8,11 +8,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
+import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 //componnents
 import { LoginComponent } from './Components/login/login.component';
 import { DefaultComponent } from './Components/default/default.component';
 import { AdminComponent } from './Components/admin/admin.component';
+import { AsignarClientesComponent } from "./Components/admin/asignar_clientes.component";
 import { AppComponent } from './Components/main/app.component';
 import { ApplicationComponent } from './Components/application/application.component';
 import { ClientComponent } from './Components/client/client.component';
@@ -22,6 +24,7 @@ import { ProjectComponent } from './Components/project/project.component';
 import { LicenseComponent } from './Components/license/license.component';
 import { InstanceComponent } from './Components/instance/instance.component';
 import { CompanyComponent } from './Components/company/company.component';
+import { ModalConfirmComponent } from './Components/modal/confirm-modal';
 
 //services
 import { CRUDService } from './Services/CRUDService/CRUDService';
@@ -37,6 +40,7 @@ import { ConsultantGuard } from "./Guards/consultant-guard";
       LoginComponent,
       DefaultComponent,
       AdminComponent,
+      AsignarClientesComponent,
       AppComponent, 
       ApplicationComponent,
       ClientComponent,
@@ -45,7 +49,8 @@ import { ConsultantGuard } from "./Guards/consultant-guard";
       LicenseComponent,
       ProjectComponent,
       InstanceComponent,
-      CompanyComponent
+      CompanyComponent,
+      ModalConfirmComponent
   ],
   imports: [
       BrowserModule,
@@ -56,7 +61,8 @@ import { ConsultantGuard } from "./Guards/consultant-guard";
       Routing,
       ButtonsModule,
       GridModule,
-      DropDownsModule
+      DropDownsModule,
+      Ng2Bs3ModalModule
     ],
   providers: [ 
       CRUDService,

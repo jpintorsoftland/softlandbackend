@@ -11,6 +11,7 @@ export class DefaultComponent{
     public isSuperAdmin: boolean;
     public isConsultant: boolean;
     public isLoged: boolean;
+    public nombreAdmin: string;
         
     constructor(private router: Router){
         this.isLoged = false;
@@ -45,6 +46,9 @@ export class DefaultComponent{
                 this.isConsultant = true;
                 break;
         }
+
+        this.nombreAdmin = sessionStorage.getItem("nombreAdmin");
+        console.log("nombreAdmin " + this.nombreAdmin);
 
     }
 

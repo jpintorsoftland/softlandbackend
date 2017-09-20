@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MobileEmpresa } from '../../Classes/MobileEmpresa';
 import { MobileCliente } from '../../Classes/MobileCliente';
@@ -8,6 +8,7 @@ import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
+import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 @Component({
     selector: 'app',
@@ -17,12 +18,15 @@ export class CompanyComponent implements OnInit{
     @Input() gridData: Array<MobileEmpresa>;
     @Input() clientes: Array<MobileCliente>;
     @Input() instancias: Array<MobileInstancia>;
+    @ViewChild('modal')
+    public modal: ModalComponent;
 
     //grid
     public formGroup: FormGroup;
     private editedRowIndex: number;
     public idEdited: number;
     private idAdmin: number;
+    public dataRemove: any;
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -66,11 +70,8 @@ export class CompanyComponent implements OnInit{
     protected editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
-      let controlId = new FormControl(dataItem.idEmpresa);
-      controlId.disable();
       this.idEdited = dataItem.idEmpresa;
       this.formGroup = new FormGroup({
-          'idEmpresa': controlId,
           'idInstancia': new FormControl(dataItem.idInstancia, Validators.required),
           'idCliente': new FormControl(dataItem.idCliente, Validators.required),
           'codigoEmpresa': new FormControl(dataItem.codigoEmpresa, Validators.required),
@@ -140,13 +141,23 @@ export class CompanyComponent implements OnInit{
     }
 
     protected removeHandler({dataItem}) {
-        this.servicio.delete(dataItem, dataItem.idEmpresa).subscribe(data => {
+      this.dataRemove = dataItem;
+      this.modal.open();
+    }
+
+    public remove(){
+      if(this.dataRemove){
+        this.servicio.delete(this.dataRemove, this.dataRemove.idEmpresa).subscribe(data => {
             this.getList();
+            this.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
         });
+      }
     }
+
+
 
     public getListClientes(): void{
       let uri  = environment.urlClientsFilter + "/" + this.idAdmin;

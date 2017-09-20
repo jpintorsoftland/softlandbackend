@@ -60,6 +60,7 @@ export class LoginComponent implements OnInit{
                 }else{
                     sessionStorage.setItem('idRolAdmin', result.idRolAdmin);
                     sessionStorage.setItem('idAdmin', result.idAdmin);
+                    sessionStorage.setItem('nombreAdmin', result.nombreAdmin);
                     sessionStorage.setItem('email', result.email);
                     sessionStorage.setItem('password', result.password);
 

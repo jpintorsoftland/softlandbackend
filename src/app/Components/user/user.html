@@ -1,7 +1,24 @@
-<h2>Usuarios</h2>
-
-<br>
-
+<modal #modal>
+    <modal-header [show-close]="true" >
+            <h4 class="modal-title">Eliminar registro</h4>
+    </modal-header>
+    <modal-body>
+            <div>
+                ¿Está seguro de querer eliminar este registro?
+            </div>
+    </modal-body>
+    <modal-footer>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancelar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="remove()">Aceptar</button>
+    </modal-footer>
+</modal>
+    
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <p class="labelTitle">Usuarios</p>
+    </div>
+</div>
+    
 
 <kendo-grid [data]="gridData" 
     [scrollable]="'none'"
@@ -12,13 +29,19 @@
     (add)="addHandler($event)">
 
     <ng-template kendoGridToolbarTemplate>
-        <button kendoGridAddCommand>Crear nuevo</button>
+        <button kendoGridAddCommand><i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nuevo</button>
     </ng-template>
-    
+     
     <kendo-grid-column field="idUsuario" title="ID" width="80"></kendo-grid-column>
     <kendo-grid-column field="codigoUsuario" title="Código" width="80"></kendo-grid-column>
-    <kendo-grid-column field="nombreUsuario" title="Nombre Usuario" width="200"></kendo-grid-column>
-    <kendo-grid-column field="email" title="E-mail" width="200"></kendo-grid-column>
+    <kendo-grid-column field="nombreUsuario" title="Nombre Usuario" width="180"></kendo-grid-column>
+    <kendo-grid-column field="email" title="E-mail" width="180"></kendo-grid-column>
+
+    <kendo-grid-column field="password" title="Clave" width="120" editor="password">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <div>{{showAsterisk()}}</div>
+        </ng-template>
+    </kendo-grid-column>
 
     <kendo-grid-column field="idCliente" title="Cliente" width="150">
         <ng-template kendoGridCellTemplate let-dataItem>
@@ -45,13 +68,22 @@
         </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-command-column title="Acciones" width="150">
+    <kendo-grid-command-column title="Acciones" width="220">
         <ng-template kendoGridCellTemplate let-isNew="isNew">
-            <button kendoGridEditCommand class="k-primary s-button">Modificar</button>
-            <button kendoGridRemoveCommand>Eliminar</button>
-            <button kendoGridSaveCommand class="k-primary s-button">{{ isNew ? 'Añadir' : 'Guardar' }}</button>
-            <button kendoGridCancelCommand>{{ isNew ? 'Descartar' : 'Cancelar' }}</button>
+            <button kendoGridEditCommand class="k-primary s-primary" title="Modificar">
+                    <i class="k-icon fa fa-edit fa-fw"></i>
+            </button>
+            <button kendoGridRemoveCommand class="k-primary s-button" title="Eliminar">
+                    <i class="k-icon fa fa-remove fa-fw"></i>
+            </button>
+
+            <button kendoGridCancelCommand class="s-button" title="{{ isNew ? 'Descartar' : 'Cancelar' }}">
+                    <i class="k-icon fa fa-remove fa-fw"></i>
+            </button>
+            <button kendoGridSaveCommand class="k-primary s-primary" title="{{ isNew ? 'Añadir' : 'Guardar' }}">
+                    <i class="k-icon fa fa-save fa-fw"></i>
+            </button>
         </ng-template>
     </kendo-grid-command-column>
-        
+    
 </kendo-grid>

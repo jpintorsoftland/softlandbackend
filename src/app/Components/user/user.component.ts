@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MobileUsuario } from '../../Classes/MobileUsuario';
 import { MobileCliente } from '../../Classes/MobileCliente';
@@ -8,7 +8,9 @@ import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { State, process } from '@progress/kendo-data-query';
+import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
+import { SHA1 } from 'crypto-js';
 
 @Component({
     selector: 'app',
@@ -17,12 +19,15 @@ import { State, process } from '@progress/kendo-data-query';
 export class UserComponent implements OnInit{
     @Input() gridData: Array<MobileUsuario>;
     @Input() clientes: Array<MobileCliente>;
+    @ViewChild('modal')
+    public modal: ModalComponent;
 
     //grid
     public formGroup: FormGroup;
     private editedRowIndex: number;
     public idEdited: number;
     private idAdmin: number;
+    public dataRemove: any;
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -47,12 +52,12 @@ export class UserComponent implements OnInit{
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
-          //'idUsuario': new FormControl(0),
           'idCliente': new FormControl(1),
           'codigoUsuario': new FormControl(""),
           'codigoCliente': new FormControl(""),
           'nombreUsuario': new FormControl(""),
           'email': new FormControl(""),
+          'password': new FormControl(""),
           'activo': new FormControl(true)
       });
       sender.addRow(this.formGroup);
@@ -61,12 +66,8 @@ export class UserComponent implements OnInit{
     protected editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
-      
-      let controlId = new FormControl(dataItem.idUsuario);
-      controlId.disable();
       this.idEdited = dataItem.idUsuario;
       this.formGroup = new FormGroup({
-        'idUsuario': new FormControl(dataItem.idUsuario),
         'idCliente': new FormControl(dataItem.idCliente),
         'codigoUsuario': new FormControl(dataItem.codigoUsuario),
         'codigoCliente': new FormControl(dataItem.codigoCliente),
@@ -114,6 +115,8 @@ export class UserComponent implements OnInit{
       const dataItem: MobileUsuario = formGroup.value;
 
       if(isNew){
+        dataItem.password = SHA1(dataItem.password).toString();
+
         this.servicio.add(dataItem).subscribe(data => {
           this.gridData.push(data);
         }, e =>{
@@ -134,13 +137,22 @@ export class UserComponent implements OnInit{
     }
 
     protected removeHandler({dataItem}) {
-        this.servicio.delete(dataItem, dataItem.idUsuario).subscribe(data => {
+      this.dataRemove = dataItem;
+      this.modal.open();
+    }
+
+    public remove(){
+      if(this.dataRemove){
+        this.servicio.delete(this.dataRemove, this.dataRemove.idUsuario).subscribe(data => {
             this.getList();
+            this.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
         });
+      }
     }
+
 
     public getListClientes(): void{
       let uri  = environment.urlClientsFilter + "/" + this.idAdmin;
@@ -166,6 +178,11 @@ export class UserComponent implements OnInit{
         
       }
 
+    }
+
+    public showAsterisk()
+    {
+        return "********";
     }
     
     /***************************************************************************/

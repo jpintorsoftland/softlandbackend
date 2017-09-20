@@ -1,3 +1,11 @@
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  background-color: #eeeeee;
+}
+
 .center{
     text-align: center;
 }
@@ -7,13 +15,43 @@
 }
 
 .s-button{
-    background-color: #1d1060 !important;
-    border-color: #1d1060 !important;
+    height: 32px !important;
+    margin-right: 5px;
+}
+
+.s-primary{
+  background-color: #1d1060 !important;
+  border-color: #1d1060 !important;
+  height: 32px !important; 
+  margin-right: 5px;
 }
 
 .s-tittle{
     font-size: 30px;
     font-weight: 500;
+}
+
+.labelUser{
+    padding:5px 20px 5px 20px; 
+    color: #1d1060; 
+    font-style: italic;
+}
+
+.labelTitle{
+  color: #1d1060; 
+  margin-bottom: 0px !important;
+}
+
+.divLogout{
+  padding: 0px 10px 25px 10px
+}
+
+.whiteText{
+  color: white;
+}
+
+.divListClients{
+  min-height: 475px;
 }
 
 

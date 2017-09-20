@@ -6,9 +6,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Inicio';
-
-  onButtonClick() {
-    this.title = 'Cambiar titulo';
-  }
-
 }

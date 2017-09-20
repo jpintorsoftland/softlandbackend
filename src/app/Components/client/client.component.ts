@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, Input, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MobileCliente } from '../../Classes/MobileCliente';
 import { MobileProyecto } from '../../Classes/MobileProyecto'
@@ -7,6 +7,7 @@ import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
+import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 @Component({
     selector: 'app',
@@ -15,12 +16,15 @@ import { State, process } from '@progress/kendo-data-query';
 export class ClientComponent implements OnInit{
     @Input() gridData: Array<MobileCliente>;
     @Input() proyectos: Array<MobileProyecto>;
+    @ViewChild('modal')
+    public modal: ModalComponent;
 
     //grid
     public formGroup: FormGroup;
     private editedRowIndex: number;
     public idEdited: number;
     private idAdmin: number;
+    public dataRemove: any;
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -58,11 +62,8 @@ export class ClientComponent implements OnInit{
     protected editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
-      let controlId = new FormControl(dataItem.idCliente);
-      controlId.disable();
       this.idEdited = dataItem.idCliente;
       this.formGroup = new FormGroup({
-          'idCliente': controlId,
           'idProyecto': new FormControl(dataItem.idProyecto, Validators.required),
           'codigoCliente': new FormControl(dataItem.codigoCliente),
           'nombreCliente': new FormControl(dataItem.nombreCliente),
@@ -128,13 +129,22 @@ export class ClientComponent implements OnInit{
     }
 
     protected removeHandler({dataItem}) {
-        this.servicio.delete(dataItem, dataItem.idCliente).subscribe(data => {
+      this.dataRemove = dataItem;
+      this.modal.open();
+    }
+
+    public remove(){
+      if(this.dataRemove){
+        this.servicio.delete(this.dataRemove, this.dataRemove.idCliente).subscribe(data => {
             this.getList();
+            this.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
         });
+      }
     }
+
 
     public getListProyectos(): void{
       this.servicio.getList().subscribe(data => {

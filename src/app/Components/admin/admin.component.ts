@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MobileAdmin } from '../../Classes/MobileAdmin';
 import { MobileRolAdmin } from '../../Classes/MobileRolAdmin';
@@ -7,6 +7,9 @@ import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
+import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+
+import { SHA1 } from 'crypto-js';
 
 @Component({
     selector: 'app',
@@ -15,16 +18,25 @@ import { State, process } from '@progress/kendo-data-query';
 export class AdminComponent implements OnInit{
     @Input() gridData: Array<MobileAdmin>;
     @Input() roles: Array<MobileRolAdmin>;
+    @ViewChild('modal')
+    public modal: ModalComponent;
 
     //grid
     public formGroup: FormGroup;
     private editedRowIndex: number;
-    public idEdited: number;
     private idAdmin: number;
+    public idEdited: number;
+    public passEdited: string;
+    public activoEdited: boolean;
+    public dataRemove: any;
+    public visibleForm: boolean;
 
 
     constructor(private servicio: CRUDService, private router: Router){
         this.idAdmin = Number( sessionStorage.getItem('idAdmin') );
+        sessionStorage.setItem("idAdminSelected", null);
+        sessionStorage.setItem("nombreAdminSelected", null);
+        this.visibleForm = true;
     }
 
 
@@ -45,10 +57,9 @@ export class AdminComponent implements OnInit{
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
-          //'idAplicacion': new FormControl(0),
           'nombreAdmin': new FormControl("", Validators.required),
           'email': new FormControl("", Validators.required),
-          'idRolAdmin': new FormControl("", Validators.required),
+          'idRolAdmin': new FormControl(1, Validators.required),
           'password': new FormControl("", Validators.required)
       });
       sender.addRow(this.formGroup);
@@ -57,16 +68,14 @@ export class AdminComponent implements OnInit{
     protected editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
-
-      let controlId = new FormControl(dataItem.idAdmin);
-      controlId.disable();
       this.idEdited = dataItem.idAdmin;
+      this.passEdited = dataItem.password;
+      this.activoEdited = dataItem.activo;
+      
       this.formGroup = new FormGroup({
-        'idAdmin': controlId,
         'nombreAdmin': new FormControl(dataItem.nombreAdmin, Validators.required),
         'email': new FormControl(dataItem.email, Validators.required),
-        'idRolAdmin': new FormControl(dataItem.idRolAdmin, Validators.required),
-        'password': new FormControl(dataItem.password)
+        'idRolAdmin': new FormControl(dataItem.idRolAdmin, Validators.required)
       });
 
       this.editedRowIndex = rowIndex;
@@ -78,9 +87,11 @@ export class AdminComponent implements OnInit{
 
     protected cancelHandler({sender, rowIndex}) {
       this.closeEditor(sender, rowIndex);
+      this.visibleForm = true;
     }
 
     private closeEditor(grid, rowIndex = this.editedRowIndex) {
+      this.visibleForm = false;
       grid.closeRow(rowIndex);
       this.editedRowIndex = undefined;
       this.formGroup = undefined;
@@ -108,6 +119,8 @@ export class AdminComponent implements OnInit{
       const dataItem: MobileAdmin = formGroup.value;
 
       if(isNew){
+        dataItem.password = SHA1(dataItem.password).toString();
+
         this.servicio.add(dataItem).subscribe(data => {
           this.gridData.push(data);
         }, e =>{
@@ -116,6 +129,8 @@ export class AdminComponent implements OnInit{
         });
       }else{
         dataItem.idAdmin = this.idEdited;
+        dataItem.password = this.passEdited;
+        dataItem.activo = this.activoEdited;
 
         this.servicio.update(dataItem, dataItem.idAdmin).subscribe(data => {
             this.getList();
@@ -129,12 +144,20 @@ export class AdminComponent implements OnInit{
     }
 
     protected removeHandler({dataItem}) {
-        this.servicio.delete(dataItem, dataItem.idAdmin).subscribe(data => {
+      this.dataRemove = dataItem;
+      this.modal.open();
+    }
+
+    public remove(){
+      if(this.dataRemove){
+        this.servicio.delete(this.dataRemove, this.dataRemove.idAdmin).subscribe(data => {
             this.getList();
+            this.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
         });
+      }
     }
 
 
@@ -158,6 +181,19 @@ export class AdminComponent implements OnInit{
         }
       }
     }
+
+    public asignClients(dataItem)
+    {
+      sessionStorage.setItem("idAdminSelected", dataItem.idAdmin);
+      sessionStorage.setItem("nombreAdminSelected", dataItem.nombreAdmin);
+      this.router.navigate(['/administradores/clientes']);
+    }
     /***************************************************************************/
+
+
+    public showAsterisk()
+    {
+        return "********";
+    }
 
 }

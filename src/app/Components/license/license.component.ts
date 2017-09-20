@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MobileLicencia } from '../../Classes/MobileLicencia';
 import { MobileCliente } from '../../Classes/MobileCliente';
@@ -12,6 +12,7 @@ import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 import { DatePipe } from '@angular/common';
+import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 @Component({
     selector: 'app',
@@ -24,12 +25,15 @@ export class LicenseComponent implements OnInit{
     @Input() empresas: Array<MobileEmpresa>;
     @Input() modulos: Array<MobileModulo>;
     @Input() tipos_permiso: Array<MobileTipoPermiso>;
+    @ViewChild('modal')
+    public modal: ModalComponent;
 
     //grid
     public formGroup: FormGroup;
     private editedRowIndex: number;
     public idEdited: number;
     private idAdmin: number;
+    public dataRemove: any;
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -91,9 +95,7 @@ export class LicenseComponent implements OnInit{
     protected editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
-      let controlId = new FormControl(dataItem.idLicencia);
       this.formGroup = new FormGroup({
-          'idLicencia': controlId,
           'idCliente': new FormControl(dataItem.idCliente, Validators.required),
           'idEmpresa': new FormControl(dataItem.idEmpresa, Validators.required),
           'idInstancia': new FormControl(dataItem.idInstancia, Validators.required),
@@ -158,6 +160,8 @@ export class LicenseComponent implements OnInit{
               this.router.navigate(["/login"]);
         });
       }else{
+        dataItem.idLicencia = this.idEdited;
+
         this.servicio.update(dataItem, dataItem.idLicencia).subscribe(data => {
             this.getList();
         }, e =>{
@@ -170,13 +174,22 @@ export class LicenseComponent implements OnInit{
     }
 
     protected removeHandler({dataItem}) {
-        this.servicio.delete(dataItem, dataItem.idLicencia).subscribe(data => {
+      this.dataRemove = dataItem;
+      this.modal.open();
+    }
+
+    public remove(){
+      if(this.dataRemove){
+        this.servicio.delete(this.dataRemove, this.dataRemove.idLicencia).subscribe(data => {
             this.getList();
+            this.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
         });
+      }
     }
+
 
     //clientes
     public getListClientes(): void{

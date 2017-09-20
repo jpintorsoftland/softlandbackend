@@ -1,6 +1,25 @@
-<h2>Administradores</h2>
+<modal #modal>
+    <modal-header [show-close]="true" >
+            <h4 class="modal-title">Eliminar registro</h4>
+    </modal-header>
+    <modal-body>
+            <div>
+                ¿Está seguro de querer eliminar este registro?
+            </div>
+    </modal-body>
+    <modal-footer>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancelar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="remove()">Aceptar</button>
+    </modal-footer>
+</modal>
 
-<br>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <p class="labelTitle">Administradores</p>
+    </div>
+</div>
+
 
 <kendo-grid [data]="gridData" 
     [scrollable]="'none'"
@@ -10,9 +29,8 @@
     (remove)="removeHandler($event)"
     (add)="addHandler($event)">
 
-    <!-- add button -->
     <ng-template kendoGridToolbarTemplate>
-        <button kendoGridAddCommand>Crear nuevo</button>
+        <button kendoGridAddCommand><i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nuevo</button>
     </ng-template>
 
     <kendo-grid-column field="idAdmin" title="ID" width="40"></kendo-grid-column>
@@ -42,12 +60,35 @@
 
     </kendo-grid-column>
 
+    <kendo-grid-column field="password" title="Clave" width="120" editor="password">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <div>{{showAsterisk()}}</div>
+        </ng-template>
+    </kendo-grid-column>
+
     <kendo-grid-command-column title="Acciones" width="220">
-        <ng-template kendoGridCellTemplate let-isNew="isNew">
-            <button kendoGridEditCommand class="k-primary s-button">Modificar</button>
-            <button kendoGridRemoveCommand>Eliminar</button>
-            <button kendoGridSaveCommand class="k-primary s-button">{{ isNew ? 'Añadir' : 'Guardar' }}</button>
-            <button kendoGridCancelCommand>{{ isNew ? 'Descartar' : 'Cancelar' }}</button>
+
+        <ng-template kendoGridCellTemplate let-isNew="isNew" let-dataItem>
+                
+            <button *ngIf="visibleForm" (click)="asignClients(dataItem)" class="k-primary s-primary" title="Asignar clientes">
+                    <i class="k-icon fa fa-users fa-fw whiteText"></i>
+            </button>
+
+
+            <button kendoGridEditCommand class="k-primary s-primary" title="Modificar">
+                    <i class="k-icon fa fa-edit fa-fw"></i>
+            </button>
+            <button kendoGridRemoveCommand class="k-primary s-button" title="Eliminar">
+                    <i class="k-icon fa fa-remove fa-fw"></i>
+            </button>
+
+            <button kendoGridCancelCommand class="s-button" title="{{ isNew ? 'Descartar' : 'Cancelar' }}">
+                    <i class="k-icon fa fa-remove fa-fw"></i>
+            </button>
+            <button kendoGridSaveCommand class="k-primary s-primary" title="{{ isNew ? 'Añadir' : 'Guardar' }}">
+                    <i class="k-icon fa fa-save fa-fw"></i>
+            </button>
+
         </ng-template>
     </kendo-grid-command-column>
     

@@ -23,5 +23,6 @@ export const environment = {
   urlProjects: "proyectos",
   urlRoles: "admin/roles",
   urlUsers: "usuarios",
-  urlUsersFilter: "usuarios/admin"
+  urlUsersFilter: "usuarios/admin",
+  urlUsersAsigned: "admin/administradores_clientes"
 };

@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ModalConfirmComponent } from './../modal/confirm-modal';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MobileAplicacion } from '../../Classes/MobileAplicacion';
 import { Router } from '@angular/router';
@@ -6,6 +7,7 @@ import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
+import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 @Component({
     selector: 'app',
@@ -13,11 +15,14 @@ import { State, process } from '@progress/kendo-data-query';
 })
 export class ApplicationComponent implements OnInit{
     @Input() gridData: Array<MobileAplicacion>;
+    @ViewChild('modal')
+    public modal: ModalComponent;
 
     //grid
     public formGroup: FormGroup;
     private editedRowIndex: number;
     public idEdited: number;
+    public dataRemove: any;
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -45,11 +50,8 @@ export class ApplicationComponent implements OnInit{
     protected editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
-      let controlId = new FormControl(dataItem.idAplicacion);
-      controlId.disable();
       this.idEdited = dataItem.idAplicacion;
       this.formGroup = new FormGroup({
-          'idAplicacion': controlId,
           'descripcion': new FormControl(dataItem.descripcion, Validators.required)
       });
 
@@ -109,13 +111,24 @@ export class ApplicationComponent implements OnInit{
     }
 
     protected removeHandler({dataItem}) {
-        this.servicio.delete(dataItem, dataItem.idAplicacion).subscribe(data => {
+      this.dataRemove = dataItem;
+      this.modal.open()
+    }
+
+
+    public remove() {
+      if(this.dataRemove){
+        this.servicio.delete(this.dataRemove, this.dataRemove.idAplicacion).subscribe(data => {
             this.getList();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
         });
+      }
     }
+
+
+    
     /***************************************************************************/
 
 }

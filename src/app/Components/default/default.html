@@ -81,6 +81,10 @@
                     </div>
 
                     <hr>
+                    <div>
+                        <p class="labelUser">{{ nombreAdmin }}</p>
+                    </div>
+                    <hr>
                     
                     <li *ngIf="isSuperAdmin"
                         [routerLinkActive]="['active']"
@@ -134,9 +138,10 @@
 
                     <hr>
                     
-                    <li [routerLinkActive]="['active']" >
-                        <a href="#" (click)="logOut()">
-                            <i class="fa fa-power-off fa-fw" aria-hidden="true"></i>&nbsp;Salir</a></li>
+                    <div class="divLogout">
+                        <a class="k-button k-button k-primary s-button" style="width: 100%" href="#" (click)="logOut()">
+                                <i class="fa fa-power-off fa-fw" aria-hidden="true"></i>&nbsp;Salir</a>
+                    </div>
 
                 </ul>
             </div>

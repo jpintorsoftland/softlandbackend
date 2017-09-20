@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <p class="labelTitle">Asignar clientes a: {{nombreAdmin}}</p>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="divListClients">
+            <div *ngFor="let cliente of clientes; let i = index;" class="col-md-6">
+                <p>
+                    <input type="checkbox" [checked]="cliente.activo" />
+                    {{cliente.nombreCliente}}</p>
+            </div>
+        </div>
+
+        <div class="col-md-12"><hr></div>
+
+        <div class="col-md-6 divLogout">
+            <a class="k-button k-button k-primary s-primary" style="width: 100%" href="#" [routerLink]="['/administradores']">
+                    <i class="fa fa-chevron-left fa-fw" aria-hidden="true"></i>&nbsp;Volver</a>
+        </div>
+
+        <div class="col-md-6 divLogout">
+            <a class="k-button k-button k-primary s-primary" style="width: 100%" href="#" (click)="guardar()">
+                    <i class="fa fa-save fa-fw" aria-hidden="true"></i>&nbsp;Guardar</a>
+        </div>
+    </div>
+</div>
+    
