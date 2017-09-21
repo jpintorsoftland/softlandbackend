@@ -118,7 +118,7 @@ export class ApplicationComponent implements OnInit{
 
     public remove() {
       if(this.dataRemove){
-        this.servicio.delete(this.dataRemove, this.dataRemove.idAplicacion).subscribe(data => {
+        this.servicio.delete(this.dataRemove.idAplicacion).subscribe(data => {
             this.getList();
         }, e =>{
             sessionStorage.removeItem("token");

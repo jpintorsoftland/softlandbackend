@@ -147,7 +147,7 @@ export class CompanyComponent implements OnInit{
 
     public remove(){
       if(this.dataRemove){
-        this.servicio.delete(this.dataRemove, this.dataRemove.idEmpresa).subscribe(data => {
+        this.servicio.delete(this.dataRemove.idEmpresa).subscribe(data => {
             this.getList();
             this.modal.close();
         }, e =>{

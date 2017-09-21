@@ -117,7 +117,7 @@ export class ProjectComponent implements OnInit{
 
     protected remove() {
       if(this.dataRemove){
-        this.servicio.delete(this.dataRemove, this.dataRemove.idProyecto).subscribe(data => {
+        this.servicio.delete(this.dataRemove.idProyecto).subscribe(data => {
             this.getList();
         }, e =>{
             sessionStorage.removeItem("token");

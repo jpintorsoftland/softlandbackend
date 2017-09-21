@@ -26,18 +26,31 @@
     (cancel)="cancelHandler($event)"
     (save)="saveHandler($event)" 
     (remove)="removeHandler($event)"
-    (add)="addHandler($event)">
+    (add)="addHandler($event)"
+    [sortable]="true"
+    [pageable]="true"
+    [filterable]="{mode: 'row'}"
+    [pageSize]="state.take"
+    [sort]="state.sort"
+    [skip]="state.skip"
+    [filter]="state.filter"
+    [sortable]="true"
+    (dataStateChange)="dataStateChange($event)">
 
     <ng-template kendoGridToolbarTemplate>
         <button kendoGridAddCommand><i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nuevo</button>
     </ng-template>
      
-    <kendo-grid-column field="idUsuario" title="ID" width="80"></kendo-grid-column>
+    <kendo-grid-column field="idUsuario" [filterable]="false" title="ID" width="80"></kendo-grid-column>
     <kendo-grid-column field="codigoUsuario" title="Código" width="80"></kendo-grid-column>
     <kendo-grid-column field="nombreUsuario" title="Nombre Usuario" width="180"></kendo-grid-column>
     <kendo-grid-column field="email" title="E-mail" width="180"></kendo-grid-column>
 
-    <kendo-grid-column field="password" title="Clave" width="120" editor="password">
+    <kendo-grid-column field="password" 
+            [filterable]="false" 
+            title="Clave" 
+            width="120" 
+            editor="password">
         <ng-template kendoGridCellTemplate let-dataItem>
             <div>{{showAsterisk()}}</div>
         </ng-template>
@@ -48,8 +61,8 @@
                 {{buscarCliente(dataItem.idCliente)?.nombreCliente}}
             </ng-template>
             <ng-template kendoGridEditTemplate
-            let-dataItem="dataItem"
-            let-formGroup="formGroup">
+                        let-dataItem="dataItem"
+                        let-formGroup="formGroup">
             <kendo-dropdownlist
                 [data]="clientes"
                 textField="nombreCliente"
@@ -62,7 +75,11 @@
         </ng-template>
     </kendo-grid-column>
     
-    <kendo-grid-column field="activo" title="Activo" editor="boolean" width="80">
+    <kendo-grid-column field="activo" 
+                        [filterable]="false" 
+                        title="Activo" 
+                        editor="boolean" 
+                        width="50">
         <ng-template kendoGridCellTemplate let-dataItem>
             <input type="checkbox" [checked]="dataItem.activo" disabled/>
         </ng-template>

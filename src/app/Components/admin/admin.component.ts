@@ -150,7 +150,7 @@ export class AdminComponent implements OnInit{
 
     public remove(){
       if(this.dataRemove){
-        this.servicio.delete(this.dataRemove, this.dataRemove.idAdmin).subscribe(data => {
+        this.servicio.delete(this.dataRemove.idAdmin).subscribe(data => {
             this.getList();
             this.modal.close();
         }, e =>{
@@ -187,6 +187,15 @@ export class AdminComponent implements OnInit{
       sessionStorage.setItem("idAdminSelected", dataItem.idAdmin);
       sessionStorage.setItem("nombreAdminSelected", dataItem.nombreAdmin);
       this.router.navigate(['/administradores/clientes']);
+    }
+
+    public isSuperAdmin(dataItem): boolean
+    {
+      if(dataItem.idRolAdmin==1){
+        return true;
+      }else{
+        return false;
+      }
     }
     /***************************************************************************/
 

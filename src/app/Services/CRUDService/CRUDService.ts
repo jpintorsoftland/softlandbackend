@@ -18,7 +18,7 @@ export class CRUDService{
         return this.http.get(url, this.getOptions() ).map(this.getDatos).catch(this.error);
     }
 
-    getItemById(model: any, id: any, url : string = this.getUrl(this.urlRequest) ): Observable<any[]>{
+    getItemById(id: any, url : string = this.getUrl(this.urlRequest) ): any{
         return this.http.get(url + '/' + id, this.getOptions() ).map(this.getDatos).catch(this.error);
     }
 
@@ -26,7 +26,8 @@ export class CRUDService{
         return this.http.post(url, model, this.getOptions() ).map(this.getDatos).catch(this.error);
     }
 
-    delete(model: any, id: any, url : string = this.getUrl(this.urlRequest) ) { 
+    delete(id: any, url : string = this.getUrl(this.urlRequest) ) { 
+        console.log("delete url: " + url + '/' + id);
         return this.http.delete(url + '/' + id, this.getOptions() ).catch(this.error);
     }
 

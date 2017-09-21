@@ -144,7 +144,7 @@ export class InstanceComponent implements OnInit{
 
     public remove(){
       if(this.dataRemove){
-        this.servicio.delete(this.dataRemove, this.dataRemove.idInstancia).subscribe(data => {
+        this.servicio.delete(this.dataRemove.idInstancia).subscribe(data => {
             this.getList();
             this.modal.close();
         }, e =>{

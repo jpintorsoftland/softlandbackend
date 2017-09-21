@@ -1,0 +1,175 @@
+<modal #modal>
+    <modal-header [show-close]="true" >
+            <h4 class="modal-title">Cambios guardados</h4>
+    </modal-header>
+    <modal-body>
+            <div>
+                Los cambios se han guardado correctamente
+            </div>
+    </modal-body>
+    <modal-footer>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Aceptar</button>
+    </modal-footer>
+</modal>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <p class="labelTitle">Licencia</p>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="col-md-6 col-md-offset-3">
+  
+                <form class="k-form" action="form" #f="ngForm" novalidate >
+                    
+                    <fieldset>
+                        <label class="k-form-field">
+                            <span>Cliente</span>
+                            <kendo-dropdownlist class="fillParent"
+                                name="cliente"
+                                [data]="clientes"
+                                textField="nombreCliente"
+                                valueField="idCliente"
+                                [valuePrimitive]="true"
+                                [(ngModel)]="licencia.idCliente">
+                            </kendo-dropdownlist>
+                            
+                        </label>
+                        <label class="k-form-field">
+                            <span>Empresa</span>
+                            <kendo-dropdownlist class="fillParent"
+                                name="empresa"
+                                [data]="empresas"
+                                textField="nombreEmpresa"
+                                valueField="idEmpresa"
+                                [valuePrimitive]="true"
+                                [(ngModel)]="licencia.idEmpresa">
+                            </kendo-dropdownlist>
+                        </label>
+                        <label class="k-form-field">
+                            <span>Instancia</span>
+                            <kendo-dropdownlist class="fillParent"
+                                name="instancia"
+                                [data]="instancias"
+                                textField="nombreInstancia"
+                                valueField="idInstancia"
+                                [valuePrimitive]="true"
+                                [(ngModel)]="licencia.idInstancia">
+                            </kendo-dropdownlist>
+                        </label>
+                        <label class="k-form-field">
+                            <span>Módulo</span>
+                            <kendo-dropdownlist class="fillParent"
+                                name="modulo"
+                                [data]="modulos"
+                                textField="descripcion"
+                                valueField="idModulo"
+                                [valuePrimitive]="true"
+                                [(ngModel)]="licencia.idModulo">
+                            </kendo-dropdownlist>
+                        </label>
+                        <label class="k-form-field">
+                            <span>Permiso</span>
+                            <kendo-dropdownlist class="fillParent"
+                                name="tipo_permiso"
+                                [data]="tipos_permiso"
+                                textField="descripcion"
+                                valueField="idTipoPermiso"
+                                [valuePrimitive]="true"
+                                [(ngModel)]="licencia.idTipoPermiso">
+                            </kendo-dropdownlist>
+                        </label>
+                        <label class="k-form-field">
+                            <span>Inicio</span>
+                            <kendo-datepicker 
+                                class="fillParent"
+                                [(ngModel)]="licencia.fechaInicio" 
+                                name="inicio" 
+                                today="Hoy"
+                                id="inicio" ></kendo-datepicker>
+                            
+                        </label>
+                        <label class="k-form-field">
+                            <span>Fin</span>
+                            <kendo-datepicker 
+                                class="fillParent"
+                                [(ngModel)]="licencia.fechaFin" 
+                                name="fin" 
+                                id="fin" ></kendo-datepicker>
+                            
+                        </label>
+                        <label class="k-form-field">
+                            <span>Sesiones contratadas</span>
+                            <kendo-numerictextbox
+                                class="fillParent"
+                                [(ngModel)]="licencia.sesionesDisponibles" 
+                                [decimals]="0"
+                                [min]="0"
+                                name="sesionesDisponibles" >
+                            </kendo-numerictextbox>
+                        </label>
+                        <label class="k-form-field">
+                            <span>Sesiones consumidas</span>
+                            <kendo-numerictextbox
+                                class="fillParent"
+                                [(ngModel)]="licencia.sesionesEnUso"
+                                [decimals]="0"
+                                [min]="0" 
+                                name="sesionesEnUso" >
+                            </kendo-numerictextbox>
+                        </label>
+                        <label class="k-form-field">
+                            <span>Access Key</span>
+                            <textarea
+                                name="accessKey" 
+                                class="k-textarea fillParent" 
+                                [(ngModel)]="licencia.accessKey" >
+                            </textarea>
+                        </label>
+                        <label class="k-form-field">
+                            <span>Workspace</span>
+                            <input type="text" 
+                                [(ngModel)]="licencia.workspaceID"
+                                class="k-textbox" 
+                                name="workspace" />
+                        </label>
+                        <label class="k-form-field">
+                            <div class="col-md-6 noPadding">
+                                <span>Caduca</span>
+                                <input type="checkbox" 
+                                    [(ngModel)]="licencia.caduca"
+                                    name="caduca" />
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <span>Activo</span>
+                                <input type="checkbox" 
+                                    [(ngModel)]="licencia.activo"
+                                    name="activo" />
+                                
+                            </div>
+                        </label>
+                    </fieldset>
+
+
+                    <div class="col-md-6 divButtonLeftForm">
+                        <a class="k-button k-primary s-primary fillParent" [routerLink]="['/licencias']">
+                                <i class="fa fa-chevron-left fa-fw" aria-hidden="true"></i>&nbsp;Volver</a>
+                    </div>
+
+                    <div class="col-md-6 divButtonRightForm">
+                        <a class="k-button k-primary s-primary fillParent" (click)="guardar()">
+                                <i class="fa fa-save fa-fw" aria-hidden="true"></i>&nbsp;Guardar</a>
+                    </div>
+                
+                
+                </form>
+
+        </div>
+              
+    </div>
+</div>
+    

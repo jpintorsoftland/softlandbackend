@@ -5,7 +5,7 @@ import { MobileCliente } from '../../Classes/MobileCliente';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { State, process } from '@progress/kendo-data-query';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
@@ -17,7 +17,7 @@ import { SHA1 } from 'crypto-js';
     templateUrl: 'user.html'
 })
 export class UserComponent implements OnInit{
-    @Input() gridData: Array<MobileUsuario>;
+    @Input() usuarios = new Array<MobileUsuario>();
     @Input() clientes: Array<MobileCliente>;
     @ViewChild('modal')
     public modal: ModalComponent;
@@ -28,6 +28,18 @@ export class UserComponent implements OnInit{
     public idEdited: number;
     private idAdmin: number;
     public dataRemove: any;
+
+
+    private state: State = {
+        skip: 0,
+        take: 5
+    };
+    private gridData: GridDataResult = process(this.usuarios, this.state);
+  
+      protected dataStateChange(state: DataStateChangeEvent): void {
+          this.state = state;
+          this.gridData = process(this.usuarios, this.state);
+      }
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -103,7 +115,8 @@ export class UserComponent implements OnInit{
       let url = this.servicio.getUrl(uri);
 
       this.servicio.getList(url).subscribe(data => {
-        this.gridData = data;
+        this.usuarios = data;
+        this.gridData = process(this.usuarios, this.state);
       }, e => {
         sessionStorage.removeItem('token');
         this.router.navigate(['/login']);
@@ -118,7 +131,7 @@ export class UserComponent implements OnInit{
         dataItem.password = SHA1(dataItem.password).toString();
 
         this.servicio.add(dataItem).subscribe(data => {
-          this.gridData.push(data);
+          this.usuarios.push(data);
         }, e =>{
               sessionStorage.removeItem("token");
               this.router.navigate(["/login"]);
@@ -143,7 +156,7 @@ export class UserComponent implements OnInit{
 
     public remove(){
       if(this.dataRemove){
-        this.servicio.delete(this.dataRemove, this.dataRemove.idUsuario).subscribe(data => {
+        this.servicio.delete(this.dataRemove.idUsuario).subscribe(data => {
             this.getList();
             this.modal.close();
         }, e =>{

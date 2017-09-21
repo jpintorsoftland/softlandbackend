@@ -6,6 +6,10 @@ body {
   background-color: #eeeeee;
 }
 
+textarea{
+  resize: none;
+}
+
 .center{
     text-align: center;
 }
@@ -13,6 +17,11 @@ body {
 .fillParent{
     width: 100%;
 }
+
+.noPadding{
+  padding: 0px;
+}
+
 
 .s-button{
     height: 32px !important;
@@ -25,6 +34,7 @@ body {
   height: 32px !important; 
   margin-right: 5px;
 }
+
 
 .s-tittle{
     font-size: 30px;
@@ -43,7 +53,15 @@ body {
 }
 
 .divLogout{
-  padding: 0px 10px 25px 10px
+  padding: 0px 10px 25px 10px;
+}
+
+.divButtonLeftForm{
+  padding: 0px 10px 0px 0px;
+}
+
+.divButtonRightForm{
+  padding: 0px 0px 0px 10px;
 }
 
 .whiteText{

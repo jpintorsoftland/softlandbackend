@@ -70,7 +70,8 @@
 
         <ng-template kendoGridCellTemplate let-isNew="isNew" let-dataItem>
                 
-            <button *ngIf="visibleForm" (click)="asignClients(dataItem)" class="k-primary s-primary" title="Asignar clientes">
+            <button *ngIf="visibleForm" [disabled]="isSuperAdmin(dataItem)" (click)="asignClients(dataItem)" 
+                    class="k-button k-primary s-primary" title="Asignar clientes">
                     <i class="k-icon fa fa-users fa-fw whiteText"></i>
             </button>
 

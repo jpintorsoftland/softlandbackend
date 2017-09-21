@@ -38,6 +38,7 @@ export class LicenseComponent implements OnInit{
 
     constructor(private servicio: CRUDService, private router: Router){
       this.idAdmin = Number( sessionStorage.getItem('idAdmin') );
+      sessionStorage.setItem("idLicenciaSelected", null);
     }
 
 
@@ -132,7 +133,7 @@ export class LicenseComponent implements OnInit{
     public formatDate(myStringDate) {
       console.log("log " + myStringDate);
       return  new Date(myStringDate.substr(0, 10) );
-  }
+    }
 
     /***************************************************************************/
     //api actions
@@ -180,7 +181,7 @@ export class LicenseComponent implements OnInit{
 
     public remove(){
       if(this.dataRemove){
-        this.servicio.delete(this.dataRemove, this.dataRemove.idLicencia).subscribe(data => {
+        this.servicio.delete(this.dataRemove.idLicencia).subscribe(data => {
             this.getList();
             this.modal.close();
         }, e =>{
@@ -306,6 +307,19 @@ export class LicenseComponent implements OnInit{
           return new MobileTipoPermiso(0, "");
         }
       }
+    }
+
+
+    public loadFormNuevo()
+    {
+      sessionStorage.setItem("idLicenciaSelected", null);
+      this.router.navigate(['/licencias/form']);
+    }
+
+    public loadForm(dataItem)
+    {
+      sessionStorage.setItem("idLicenciaSelected", dataItem.idLicencia);
+      this.router.navigate(['/licencias/form']);
     }
     /***************************************************************************/
 

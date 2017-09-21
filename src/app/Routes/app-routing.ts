@@ -9,6 +9,7 @@ import { ModuleComponent } from "../Components/module/module.component";
 import { UserComponent } from "../Components/user/user.component";
 import { ProjectComponent } from "../Components/project/project.component";
 import { LicenseComponent } from "../Components/license/license.component";
+import { FormLicenseComponent } from "../Components/license/form-license.component";
 import { InstanceComponent } from '../Components/instance/instance.component';
 import { CompanyComponent } from '../Components/company/company.component';
 
@@ -29,6 +30,7 @@ const appRoutes: Routes = [
     { path: "usuarios", component: UserComponent, canActivate: [AuthGuard] },
     { path: "proyectos", component: ProjectComponent, canActivate: [AuthGuard] },
     { path: "licencias", component: LicenseComponent, canActivate: [AuthGuard, ConsultantGuard] },
+    { path: "licencias/form", component: FormLicenseComponent, canActivate: [AuthGuard, ConsultantGuard] },
     { path: "**", redirectTo: ""}
 ];
 

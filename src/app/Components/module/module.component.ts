@@ -117,7 +117,7 @@ export class ModuleComponent {
 
     public remove(){
       if(this.dataRemove){
-        this.servicio.delete(this.dataRemove, this.dataRemove.idModulo).subscribe(data => {
+        this.servicio.delete(this.dataRemove.idModulo).subscribe(data => {
             this.getList();
             this.modal.close();
         }, e =>{

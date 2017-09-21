@@ -135,7 +135,7 @@ export class ClientComponent implements OnInit{
 
     public remove(){
       if(this.dataRemove){
-        this.servicio.delete(this.dataRemove, this.dataRemove.idCliente).subscribe(data => {
+        this.servicio.delete(this.dataRemove.idCliente).subscribe(data => {
             this.getList();
             this.modal.close();
         }, e =>{

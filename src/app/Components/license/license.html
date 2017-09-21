@@ -28,8 +28,18 @@
     (remove)="removeHandler($event)"
     (add)="addHandler($event)">
 
+    <!--
     <ng-template kendoGridToolbarTemplate>
         <button kendoGridAddCommand><i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nueva</button>
+    </ng-template>
+    -->
+
+
+    <ng-template kendoGridToolbarTemplate>
+            <button (click)="loadFormNuevo()" 
+                    class="k-button s-button" title="Editar">
+                    <i class="k-icon fa fa-plus fa-fw whiteText"></i>&nbsp;Crear nueva
+            </button>
     </ng-template>
 
     <kendo-grid-column field="idLicencia" title="ID" width="40"></kendo-grid-column>
@@ -110,7 +120,7 @@
         </ng-template>
     </kendo-grid-column>
 
-
+    <!--
     <kendo-grid-column field="idTipoPermiso" title="Permisos" width="150">
         <ng-template kendoGridCellTemplate let-dataItem>
                 {{buscarTipoPermiso(dataItem.idTipoPermiso)?.descripcion}}
@@ -129,33 +139,36 @@
             </kendo-dropdownlist>
         </ng-template>
     </kendo-grid-column>
+    -->
     
 
-    <kendo-grid-column field="fechaInicio" title="Fecha Inicio" editor="date" width="40">
+    <kendo-grid-column field="fechaInicio" title="Inicio" editor="date" width="40">
         <ng-template kendoGridCellTemplate let-dataItem>
-            <div *ngIf="dataItem.fechaInicio!=null">{{ formatDate(dataItem.fechaInicio) | date:"shortDate" }}</div>
+            <div *ngIf="dataItem.fechaInicio!=null">{{ dataItem.fechaInicio | date:"shortDate" }}</div>
         </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="fechaFin" title="Fecha Fin" editor="date" width="40" >
+    <kendo-grid-column field="fechaFin" title="Fin" editor="date" width="40" >
         <ng-template kendoGridCellTemplate let-dataItem>
-            <div *ngIf="dataItem.fechaFin!=null">{{ formatDate(dataItem.fechaFin) | date:"shortDate" }}</div>
+            <div *ngIf="dataItem.fechaFin!=null">{{ dataItem.fechaFin | date:"shortDate" }}</div>
         </ng-template>
     </kendo-grid-column>
 
-
-    <kendo-grid-column field="caduca" title="Caduca" editor="boolean" width="120">
+    <!--
+    <kendo-grid-column field="caduca" title="Caduca" editor="boolean" width="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             <input type="checkbox" [checked]="dataItem.caduca" disabled/>
         </ng-template>
     </kendo-grid-column>
+    -->
 
-    <kendo-grid-column field="activo" title="Activo" editor="boolean" width="120">
+    <kendo-grid-column field="activo" title="Activo" editor="boolean" width="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             <input type="checkbox" [checked]="dataItem.activo" disabled/>
         </ng-template>
     </kendo-grid-column>
 
+    <!--
     <kendo-grid-command-column title="Acciones" width="220">
         <ng-template kendoGridCellTemplate let-isNew="isNew">
             <button kendoGridEditCommand class="k-primary s-primary" title="Modificar">
@@ -171,6 +184,19 @@
             <button kendoGridSaveCommand class="k-primary s-primary" title="{{ isNew ? 'Añadir' : 'Guardar' }}">
                     <i class="k-icon fa fa-save fa-fw"></i>
             </button>
+        </ng-template>
+    </kendo-grid-command-column>
+    -->
+
+    <kendo-grid-command-column title="Acciones" width="100">
+        
+        <ng-template kendoGridCellTemplate let-isNew="isNew" let-dataItem>
+                
+            <button (click)="loadForm(dataItem)" 
+                    class="k-button k-primary s-primary" title="Editar">
+                    <i class="k-icon fa fa-edit fa-fw whiteText"></i>
+            </button>
+ 
         </ng-template>
     </kendo-grid-command-column>
     

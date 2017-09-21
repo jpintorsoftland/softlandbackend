@@ -10,13 +10,13 @@ export class MobileLicencia{
                 public codigoInstancia: string,
                 public codigoCliente: string,
                 public codigoEmpresa: string,
-                public fechaInicio: string,
-                public fechaFin: string,
+                public fechaInicio: Date,
+                public fechaFin: Date,
                 public caduca: string,
                 public workspaceID: string,
                 public accesKey: string,
-                public sesionesDisponibles: string,
-                public sesionesEnUso: string,
+                public sesionesDisponibles: number,
+                public sesionesEnUso: number,
                 public activo: boolean){
 
     }
