@@ -6,7 +6,7 @@ import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
-import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal';
 
 @Component({
     selector: 'app',
@@ -14,8 +14,10 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 })
 export class ModuleComponent {
     @Input() gridData: Array<MobileModulo>;
-    @ViewChild('modal')
-    public modal: ModalComponent;
+    @ViewChild('confirmModal')
+    public confirmModal: ModalConfirmComponent;
+    public confirmModalTitle: string = "Eliminar aplicacion";
+    public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid
     public formGroup: FormGroup;
@@ -112,14 +114,14 @@ export class ModuleComponent {
 
     protected removeHandler({dataItem}) {
       this.dataRemove = dataItem;
-      this.modal.open();
+      this.confirmModal.modal.open();
     }
 
     public remove(){
       if(this.dataRemove){
         this.servicio.delete(this.dataRemove.idModulo).subscribe(data => {
             this.getList();
-            this.modal.close();
+            this.confirmModal.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);

@@ -1,14 +1,14 @@
 <modal #modal>
-    <modal-header [show-close]="true" >
-            <h4 class="modal-title">Eliminar registro</h4>
-    </modal-header>
-    <modal-body>
-            <div>
-                ¿Está seguro de querer eliminar este registro?
-            </div>
-    </modal-body>
-    <modal-footer>
-            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancelar</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="remove()">Aceptar</button>
-    </modal-footer>
+        <modal-header [show-close]="true" >
+                <h4 class="modal-title">{{ title }}</h4>
+        </modal-header>
+        <modal-body>
+                <div>
+                        {{ message }}
+                </div>
+        </modal-body>
+        <modal-footer>
+                <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancelar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="aceptar()">Aceptar</button>
+        </modal-footer>
 </modal>

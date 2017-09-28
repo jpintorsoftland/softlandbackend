@@ -6,20 +6,22 @@ import { MobileInstancia } from '../../Classes/MobileInstancia';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
-import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal';
 
 @Component({
     selector: 'app',
     templateUrl: 'company.html'
 })
 export class CompanyComponent implements OnInit{
-    @Input() gridData: Array<MobileEmpresa>;
+    @Input() empresas = new Array<MobileEmpresa>();
     @Input() clientes: Array<MobileCliente>;
     @Input() instancias: Array<MobileInstancia>;
-    @ViewChild('modal')
-    public modal: ModalComponent;
+    @ViewChild('confirmModal')
+    public confirmModal: ModalConfirmComponent;
+    public confirmModalTitle: string = "Eliminar aplicacion";
+    public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid
     public formGroup: FormGroup;
@@ -27,6 +29,17 @@ export class CompanyComponent implements OnInit{
     public idEdited: number;
     private idAdmin: number;
     public dataRemove: any;
+
+    private state: State = {
+      skip: 0,
+      take: 12
+    };
+    private gridData: GridDataResult = process(this.empresas, this.state);
+
+    protected dataStateChange(state: DataStateChangeEvent): void {
+        this.state = state;
+        this.gridData = process(this.empresas, this.state);
+    }
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -108,7 +121,8 @@ export class CompanyComponent implements OnInit{
       let url = this.servicio.getUrl(uri);
 
       this.servicio.getList(url).subscribe(data => {
-        this.gridData = data;
+        this.empresas = data;
+        this.gridData = process(this.empresas, this.state);
       }, e => {
         sessionStorage.removeItem('token');
         this.router.navigate(['/login']);
@@ -122,7 +136,8 @@ export class CompanyComponent implements OnInit{
 
       if(isNew){
         this.servicio.add(dataItem).subscribe(data => {
-          this.gridData.push(data);
+          this.empresas.push(data);
+          this.gridData = process(this.empresas, this.state);
         }, e =>{
               sessionStorage.removeItem("token");
               this.router.navigate(["/login"]);
@@ -142,14 +157,14 @@ export class CompanyComponent implements OnInit{
 
     protected removeHandler({dataItem}) {
       this.dataRemove = dataItem;
-      this.modal.open();
+      this.confirmModal.modal.open();
     }
 
     public remove(){
       if(this.dataRemove){
         this.servicio.delete(this.dataRemove.idEmpresa).subscribe(data => {
             this.getList();
-            this.modal.close();
+            this.confirmModal.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
@@ -182,6 +197,13 @@ export class CompanyComponent implements OnInit{
       }
     }
 
+    public filtroCliente(idCliente: Number){
+      if(idCliente){
+          this.gridData = process(this.empresas.filter(item => item.idCliente == idCliente), this.state);
+        }else{
+          this.gridData = process(this.empresas, this.state);
+        }
+    }
 
     public getListInstancias(): void{
       let uri  = environment.urlInstancesFilter + "/" + this.idAdmin;
@@ -205,6 +227,16 @@ export class CompanyComponent implements OnInit{
           }
         }
       }
+
+
+      public filtroInstancia(idInstancia: Number){
+        if(idInstancia){
+            this.gridData = process(this.empresas.filter(item => item.idInstancia == idInstancia), this.state);
+          }else{
+            this.gridData = process(this.empresas, this.state);
+          }
+      }
+
     /***************************************************************************/
 
 }

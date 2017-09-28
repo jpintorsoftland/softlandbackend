@@ -1,17 +1,5 @@
-<modal #modal>
-    <modal-header [show-close]="true" >
-            <h4 class="modal-title">Eliminar registro</h4>
-    </modal-header>
-    <modal-body>
-            <div>
-                ¿Está seguro de querer eliminar este registro?
-            </div>
-    </modal-body>
-    <modal-footer>
-            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancelar</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="remove()">Aceptar</button>
-    </modal-footer>
-</modal>
+<!-- confirmacion previa al borrado -->
+<confirm-modal #confirmModal [title]=confirmModalTitle [message]="confirmModalMessage" (acceptChanged)="remove()"></confirm-modal>
 
 
 <div class="panel panel-default">
@@ -27,13 +15,22 @@
     (cancel)="cancelHandler($event)"
     (save)="saveHandler($event)" 
     (remove)="removeHandler($event)"
-    (add)="addHandler($event)">
+    (add)="addHandler($event)"
+    [sortable]="true"
+    [pageable]="true"
+    [filterable]="true"
+    [pageSize]="state.take"
+    [sort]="state.sort"
+    [skip]="state.skip"
+    [filter]="state.filter"
+    [sortable]="true"
+    (dataStateChange)="dataStateChange($event)">
 
     <ng-template kendoGridToolbarTemplate>
         <button kendoGridAddCommand><i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nuevo</button>
     </ng-template>
 
-    <kendo-grid-column field="idAdmin" title="ID" width="40"></kendo-grid-column>
+    <kendo-grid-column field="idAdmin" title="ID" width="40" [filterable]="false"></kendo-grid-column>
     <kendo-grid-column field="nombreAdmin" title="Nombre Admin" width="200"></kendo-grid-column>
     <kendo-grid-column field="email" title="Email" width="200"></kendo-grid-column>
     <kendo-grid-column field="idRolAdmin" title="Rol" width="120">
@@ -42,10 +39,10 @@
             {{buscarRoles(dataItem.idRolAdmin)?.descripcion}}
         </ng-template>
        
+        <!-- add/edit form -->
         <ng-template kendoGridEditTemplate
             let-dataItem="dataItem"
             let-formGroup="formGroup">
-            
             <kendo-dropdownlist
                 [data]="roles"
                 name="roles"
@@ -55,18 +52,29 @@
                 [(ngModel)]="dataItem.idRolAdmin"
                 [formControl]="formGroup.get('idRolAdmin')" >
             </kendo-dropdownlist>
-            
+        </ng-template>
+
+        <!-- filter -->
+        <ng-template kendoGridFilterCellTemplate
+            let-dataItem="dataItem">
+            <kendo-combobox 
+                [data]="roles"
+                textField="descripcion"
+                valueField="idRolAdmin"
+                [valuePrimitive]="true"
+                (valueChange)="filtroRol($event)">
+                </kendo-combobox>
         </ng-template>
 
     </kendo-grid-column>
 
-    <kendo-grid-column field="password" title="Clave" width="120" editor="password">
+    <kendo-grid-column field="password" title="Clave" width="120" editor="password" [filterable]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
             <div>{{showAsterisk()}}</div>
         </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-command-column title="Acciones" width="220">
+    <kendo-grid-command-column title="Acciones" width="120">
 
         <ng-template kendoGridCellTemplate let-isNew="isNew" let-dataItem>
                 

@@ -9,24 +9,26 @@ import { MobileTipoPermiso } from '../../Classes/MobileTipoPermiso';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 import { DatePipe } from '@angular/common';
-import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal';
 
 @Component({
     selector: 'app',
     templateUrl: 'license.html'
 })
 export class LicenseComponent implements OnInit{
-    @Input() gridData: Array<MobileLicencia>;
+    @Input() licencias = new Array<MobileLicencia>();
     @Input() clientes: Array<MobileCliente>;
     @Input() instancias: Array<MobileInstancia>;
     @Input() empresas: Array<MobileEmpresa>;
     @Input() modulos: Array<MobileModulo>;
     @Input() tipos_permiso: Array<MobileTipoPermiso>;
-    @ViewChild('modal')
-    public modal: ModalComponent;
+    @ViewChild('confirmModal')
+    public confirmModal: ModalConfirmComponent;
+    public confirmModalTitle: string = "Eliminar aplicacion";
+    public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid
     public formGroup: FormGroup;
@@ -34,6 +36,17 @@ export class LicenseComponent implements OnInit{
     public idEdited: number;
     private idAdmin: number;
     public dataRemove: any;
+
+    private state: State = {
+      skip: 0,
+      take: 12
+    };
+    private gridData: GridDataResult = process(this.licencias, this.state);
+
+    protected dataStateChange(state: DataStateChangeEvent): void {
+        this.state = state;
+        this.gridData = process(this.licencias, this.state);
+    }
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -142,7 +155,8 @@ export class LicenseComponent implements OnInit{
       let url = this.servicio.getUrl(uri);
 
       this.servicio.getList(url).subscribe(data => {
-        this.gridData = data;
+        this.licencias = data;
+        this.gridData = process(this.licencias, this.state);
       }, e => {
         sessionStorage.removeItem('token');
         this.router.navigate(['/login']);
@@ -155,7 +169,8 @@ export class LicenseComponent implements OnInit{
 
       if(isNew){
         this.servicio.add(dataItem).subscribe(data => {
-          this.gridData.push(data);
+          this.licencias.push(data);
+          this.gridData = process(this.licencias, this.state);
         }, e =>{
               sessionStorage.removeItem("token");
               this.router.navigate(["/login"]);
@@ -176,14 +191,14 @@ export class LicenseComponent implements OnInit{
 
     protected removeHandler({dataItem}) {
       this.dataRemove = dataItem;
-      this.modal.open();
+      this.confirmModal.modal.open();
     }
 
     public remove(){
       if(this.dataRemove){
         this.servicio.delete(this.dataRemove.idLicencia).subscribe(data => {
             this.getList();
-            this.modal.close();
+            this.confirmModal.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
@@ -216,6 +231,16 @@ export class LicenseComponent implements OnInit{
       }
     }
 
+
+    public filtroCliente(idCliente: Number){
+      if(idCliente){
+          this.gridData = process(this.licencias.filter(item => item.idCliente == idCliente), this.state);
+        }else{
+          this.gridData = process(this.licencias, this.state);
+        }
+    }
+
+
     //instancias
     public getListInstancias(): void{
       let uri  = environment.urlInstancesFilter + "/" + this.idAdmin;
@@ -241,6 +266,16 @@ export class LicenseComponent implements OnInit{
       }
 
 
+    public filtroInstancia(idInstancia: Number){
+      if(idInstancia){
+          this.gridData = process(this.licencias.filter(item => item.idInstancia == idInstancia), this.state);
+        }else{
+          this.gridData = process(this.licencias, this.state);
+        }
+    }
+
+
+
     //modulos
     public getListModulos(): void{
       this.servicio.getList().subscribe(data => {
@@ -261,6 +296,16 @@ export class LicenseComponent implements OnInit{
         }
       }
     }
+
+
+    public filtroModulo(idModulo: Number){
+      if(idModulo){
+          this.gridData = process(this.licencias.filter(item => item.idModulo == idModulo), this.state);
+        }else{
+          this.gridData = process(this.licencias, this.state);
+        }
+    }
+
 
 
     //empresas
@@ -285,6 +330,15 @@ export class LicenseComponent implements OnInit{
           return new MobileEmpresa(0, 0, 0, "", "", "", "", true);
         }
       }
+    }
+
+
+    public filtroEmpresa(idEmpresa: Number){
+      if(idEmpresa){
+          this.gridData = process(this.licencias.filter(item => item.idEmpresa == idEmpresa), this.state);
+        }else{
+          this.gridData = process(this.licencias, this.state);
+        }
     }
 
 

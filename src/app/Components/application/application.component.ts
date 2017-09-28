@@ -1,4 +1,3 @@
-import { ModalConfirmComponent } from './../modal/confirm-modal';
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MobileAplicacion } from '../../Classes/MobileAplicacion';
@@ -7,7 +6,7 @@ import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
-import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal';
 
 @Component({
     selector: 'app',
@@ -15,8 +14,10 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 })
 export class ApplicationComponent implements OnInit{
     @Input() gridData: Array<MobileAplicacion>;
-    @ViewChild('modal')
-    public modal: ModalComponent;
+    @ViewChild('confirmModal')
+    public confirmModal: ModalConfirmComponent;
+    public confirmModalTitle: string = "Eliminar aplicacion";
+    public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid
     public formGroup: FormGroup;
@@ -112,7 +113,7 @@ export class ApplicationComponent implements OnInit{
 
     protected removeHandler({dataItem}) {
       this.dataRemove = dataItem;
-      this.modal.open()
+      this.confirmModal.modal.open();
     }
 
 
@@ -120,6 +121,7 @@ export class ApplicationComponent implements OnInit{
       if(this.dataRemove){
         this.servicio.delete(this.dataRemove.idAplicacion).subscribe(data => {
             this.getList();
+            this.confirmModal.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);

@@ -1,17 +1,5 @@
-<modal #modal>
-    <modal-header [show-close]="true" >
-            <h4 class="modal-title">Eliminar registro</h4>
-    </modal-header>
-    <modal-body>
-            <div>
-                ¿Está seguro de querer eliminar este registro?
-            </div>
-    </modal-body>
-    <modal-footer>
-            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancelar</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="remove()">Aceptar</button>
-    </modal-footer>
-</modal>
+<!-- confirmacion previa al borrado -->
+<confirm-modal #confirmModal [title]=confirmModalTitle [message]="confirmModalMessage" (acceptChanged)="remove()"></confirm-modal>
 
     
 <div class="panel panel-default">
@@ -26,13 +14,22 @@
     (cancel)="cancelHandler($event)"
     (save)="saveHandler($event)" 
     (remove)="removeHandler($event)"
-    (add)="addHandler($event)">
+    (add)="addHandler($event)"
+    [sortable]="true"
+    [pageable]="true"
+    [filterable]="true"
+    [pageSize]="state.take"
+    [sort]="state.sort"
+    [skip]="state.skip"
+    [filter]="state.filter"
+    [sortable]="true"
+    (dataStateChange)="dataStateChange($event)" >
 
     <ng-template kendoGridToolbarTemplate>
         <button kendoGridAddCommand><i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nueva</button>
     </ng-template>
 
-    <kendo-grid-column field="idInstancia" title="ID" width="40"></kendo-grid-column>
+    <kendo-grid-column field="idInstancia" title="ID" width="40" [filterable]="false"></kendo-grid-column>
     <kendo-grid-column field="codigoInstancia" title="Instancia" width="80"></kendo-grid-column>
     <kendo-grid-column field="nombreInstancia" title="Nombre" width="200"></kendo-grid-column>
 
@@ -40,42 +37,71 @@
         <ng-template kendoGridCellTemplate let-dataItem>
             {{buscarProyecto(dataItem.idProyecto)?.descripcion}}
         </ng-template>
+
+        <!-- add/edit form -->
         <ng-template kendoGridEditTemplate
         let-dataItem="dataItem"
         let-formGroup="formGroup">
-        <kendo-dropdownlist
-            [data]="proyectos"
-            textField="descripcion"
-            valueField="idProyecto"
-            [valuePrimitive]="true"
-            [(ngModel)]="dataItem.idProyecto"
-            [formControl]="formGroup.get('idProyecto')"
-        >
-        </kendo-dropdownlist>
+            <kendo-dropdownlist
+                [data]="proyectos"
+                textField="descripcion"
+                valueField="idProyecto"
+                [valuePrimitive]="true"
+                [(ngModel)]="dataItem.idProyecto"
+                [formControl]="formGroup.get('idProyecto')"></kendo-dropdownlist>
         </ng-template>
+            
+        <!-- filter -->
+        <ng-template kendoGridFilterCellTemplate
+        let-dataItem="dataItem">
+        <kendo-combobox 
+                [data]="proyectos"
+                textField="descripcion"
+                valueField="idProyecto"
+                [valuePrimitive]="true"
+                (valueChange)="filtroProyecto($event)">
+            </kendo-combobox>
+        </ng-template>
+        
     </kendo-grid-column>
 
     <kendo-grid-column field="idCliente" title="Cliente" width="150">
         <ng-template kendoGridCellTemplate let-dataItem>
                 {{buscarCliente(dataItem.idCliente)?.nombreCliente}}
             </ng-template>
+
+            <!-- add/edit form -->
             <ng-template kendoGridEditTemplate
-            let-dataItem="dataItem"
-            let-formGroup="formGroup">
-            <kendo-dropdownlist
-                [data]="clientes"
-                textField="nombreCliente"
-                valueField="idCliente"
-                [valuePrimitive]="true"
-                [(ngModel)]="dataItem.idCliente"
-                [formControl]="formGroup.get('idCliente')"
-            >
-            </kendo-dropdownlist>
-        </ng-template>
+                let-dataItem="dataItem"
+                let-formGroup="formGroup">
+                <kendo-dropdownlist
+                    [data]="clientes"
+                    textField="nombreCliente"
+                    valueField="idCliente"
+                    [valuePrimitive]="true"
+                    [(ngModel)]="dataItem.idCliente"
+                    [formControl]="formGroup.get('idCliente')"
+                    >
+                </kendo-dropdownlist>
+            </ng-template>
+
+
+            <!-- filter -->
+            <ng-template kendoGridFilterCellTemplate
+                let-dataItem="dataItem">
+                <kendo-combobox 
+                        [data]="clientes"
+                        textField="nombreCliente"
+                        valueField="idCliente"
+                        [valuePrimitive]="true"
+                        (valueChange)="filtroCliente($event)">
+                </kendo-combobox>
+            </ng-template>
+
     </kendo-grid-column>
 
 
-    <kendo-grid-command-column title="Acciones" width="220">
+    <kendo-grid-command-column title="Acciones" width="120">
         <ng-template kendoGridCellTemplate let-isNew="isNew">
             <button kendoGridEditCommand class="k-primary s-primary" title="Modificar">
                     <i class="k-icon fa fa-edit fa-fw"></i>

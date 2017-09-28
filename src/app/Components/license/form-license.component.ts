@@ -21,7 +21,7 @@ export class FormLicenseComponent implements OnInit{
     private idLicencia: number;
     private isNew: boolean;
     private idAdmin: number;
-    @Input() licencia: MobileLicencia = new MobileLicencia(0, 0, 0, 0, 0, 0, "", "", "", "", new Date(), new Date(), "", "", "", 0, 0, true);
+    @Input() licencia: MobileLicencia = new MobileLicencia(0, 0, 0, 0, 0, 0, "", "", "", "", new Date(), new Date(), false, "", "", 0, 0, true);
     @Input() clientes: Array<MobileCliente>;
     @Input() instancias: Array<MobileInstancia>;
     @Input() empresas: Array<MobileEmpresa>;
@@ -212,22 +212,28 @@ export class FormLicenseComponent implements OnInit{
       public guardar(){
         this.servicio.urlRequest = environment.urlLicenses;
 
-          if(this.isNew){
-                this.servicio.add(this.licencia).subscribe(data => {
-                    this.router.navigate(["/licencias"]);
-                }, e =>{
-                    sessionStorage.removeItem("token");
-                    this.router.navigate(["/login"]);
-                });
-          }else{
-            this.servicio.update(this.licencia, this.licencia.idLicencia).subscribe(data => {
-                this.modal.open();
-                this.getLicencia();
-            }, e =>{
-                sessionStorage.removeItem("token");
-                this.router.navigate(["/login"]);
-            });
-          }
+        if(!this.licencia.caduca){
+          this.licencia.fechaInicio = null;
+          this.licencia.fechaFin = null;
+        }
+      
+        if(this.isNew){
+              this.servicio.add(this.licencia).subscribe(data => {
+                  this.router.navigate(["/licencias"]);
+              }, e =>{
+                  sessionStorage.removeItem("token");
+                  this.router.navigate(["/login"]);
+              });
+        }else{
+          this.servicio.update(this.licencia, this.licencia.idLicencia).subscribe(data => {
+              this.modal.open();
+              this.getLicencia();
+          }, e =>{
+              sessionStorage.removeItem("token");
+              this.router.navigate(["/login"]);
+          });
+        }
+        
       }
 
       public formatDate(myStringDate): Date {

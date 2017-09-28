@@ -5,9 +5,9 @@ import { MobileRolAdmin } from '../../Classes/MobileRolAdmin';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
-import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal';
 
 import { SHA1 } from 'crypto-js';
 
@@ -16,10 +16,12 @@ import { SHA1 } from 'crypto-js';
     templateUrl: 'admin.html'
 })
 export class AdminComponent implements OnInit{
-    @Input() gridData: Array<MobileAdmin>;
-    @Input() roles: Array<MobileRolAdmin>;
-    @ViewChild('modal')
-    public modal: ModalComponent;
+    @Input() administradores = new Array<MobileAdmin>();
+    @Input() roles = Array<MobileRolAdmin>();
+    @ViewChild('confirmModal')
+    public confirmModal: ModalConfirmComponent;
+    public confirmModalTitle: string = "Eliminar adsministrador";
+    public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid
     public formGroup: FormGroup;
@@ -30,6 +32,19 @@ export class AdminComponent implements OnInit{
     public activoEdited: boolean;
     public dataRemove: any;
     public visibleForm: boolean;
+
+
+    private state: State = {
+        skip: 0,
+        take: 12
+    };
+    private gridData: GridDataResult = process(this.administradores, this.state);
+
+    protected dataStateChange(state: DataStateChangeEvent): void {
+        this.state = state;
+        this.gridData = process(this.administradores, this.state);
+    }
+
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -107,7 +122,8 @@ export class AdminComponent implements OnInit{
       let url = this.servicio.getUrl(uri);
 
       this.servicio.getList(url).subscribe(data => {
-        this.gridData = data;
+        this.administradores = data;
+        this.gridData = process(this.administradores, this.state);
       }, e => {
         sessionStorage.removeItem('token');
         this.router.navigate(['/login']);
@@ -122,7 +138,8 @@ export class AdminComponent implements OnInit{
         dataItem.password = SHA1(dataItem.password).toString();
 
         this.servicio.add(dataItem).subscribe(data => {
-          this.gridData.push(data);
+          this.administradores.push(data);
+          this.gridData = process(this.administradores, this.state);
         }, e =>{
               sessionStorage.removeItem("token");
               this.router.navigate(["/login"]);
@@ -145,14 +162,14 @@ export class AdminComponent implements OnInit{
 
     protected removeHandler({dataItem}) {
       this.dataRemove = dataItem;
-      this.modal.open();
+      this.confirmModal.modal.open();
     }
 
     public remove(){
       if(this.dataRemove){
         this.servicio.delete(this.dataRemove.idAdmin).subscribe(data => {
             this.getList();
-            this.modal.close();
+            this.confirmModal.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
@@ -181,6 +198,15 @@ export class AdminComponent implements OnInit{
         }
       }
     }
+    
+    public filtroRol(idRol: Number){
+        if(idRol){
+          this.gridData = process(this.administradores.filter(item => item.idRolAdmin == idRol), this.state);
+        }else{
+          this.gridData = process(this.administradores, this.state);
+        }
+    }
+
 
     public asignClients(dataItem)
     {
@@ -204,5 +230,6 @@ export class AdminComponent implements OnInit{
     {
         return "********";
     }
+  
 
 }

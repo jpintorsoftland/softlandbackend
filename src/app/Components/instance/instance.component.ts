@@ -6,20 +6,22 @@ import { MobileProyecto } from '../../Classes/MobileProyecto';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
-import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal';
 
 @Component({
     selector: 'app',
     templateUrl: 'instance.html'
 })
 export class InstanceComponent implements OnInit{
-    @Input() gridData: Array<MobileInstancia>;
+    @Input() instancias = new Array<MobileInstancia>();
     @Input() proyectos: Array<MobileProyecto>;
     @Input() clientes: Array<MobileCliente>;
-    @ViewChild('modal')
-    public modal: ModalComponent;
+    @ViewChild('confirmModal')
+    public confirmModal: ModalConfirmComponent;
+    public confirmModalTitle: string = "Eliminar aplicacion";
+    public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid
     public formGroup: FormGroup;
@@ -28,6 +30,18 @@ export class InstanceComponent implements OnInit{
     private idAdmin: number;
     public activoEdited: boolean;
     public dataRemove: any;
+
+    private state: State = {
+      skip: 0,
+      take: 12
+    };
+    private gridData: GridDataResult = process(this.instancias, this.state);
+
+    protected dataStateChange(state: DataStateChangeEvent): void {
+        this.state = state;
+        this.gridData = process(this.instancias, this.state);
+    }
+
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -105,7 +119,8 @@ export class InstanceComponent implements OnInit{
       let url = this.servicio.getUrl(uri);
 
       this.servicio.getList(url).subscribe(data => {
-        this.gridData = data;
+        this.instancias = data;
+        this.gridData = process(this.instancias, this.state);
       }, e => {
         sessionStorage.removeItem('token');
         this.router.navigate(['/login']);
@@ -118,7 +133,8 @@ export class InstanceComponent implements OnInit{
 
       if(isNew){
         this.servicio.add(dataItem).subscribe(data => {
-          this.gridData.push(data);
+          this.instancias.push(data);
+          this.gridData = process(this.instancias, this.state);
         }, e =>{
               sessionStorage.removeItem("token");
               this.router.navigate(["/login"]);
@@ -139,14 +155,14 @@ export class InstanceComponent implements OnInit{
 
     protected removeHandler({dataItem}) {
       this.dataRemove = dataItem;
-      this.modal.open();
+      this.confirmModal.modal.open();
     }
 
     public remove(){
       if(this.dataRemove){
         this.servicio.delete(this.dataRemove.idInstancia).subscribe(data => {
             this.getList();
-            this.modal.close();
+            this.confirmModal.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
@@ -175,6 +191,15 @@ export class InstanceComponent implements OnInit{
       }
     }
 
+    public filtroProyecto(idProyecto: Number){
+        if(idProyecto){
+          this.gridData = process(this.instancias.filter(item => item.idProyecto == idProyecto), this.state);
+        }else{
+          this.gridData = process(this.instancias, this.state);
+        }
+    }
+
+
     public getListClientes(): void{
       let uri  = environment.urlClientsFilter + "/" + this.idAdmin;
       let url = this.servicio.getUrl(uri);
@@ -197,6 +222,16 @@ export class InstanceComponent implements OnInit{
         }
       }
     }
+
+        
+    public filtroCliente(idCliente: Number){
+      if(idCliente){
+          this.gridData = process(this.instancias.filter(item => item.idCliente == idCliente), this.state);
+        }else{
+          this.gridData = process(this.instancias, this.state);
+        }
+    }
+
     /***************************************************************************/
 
 }

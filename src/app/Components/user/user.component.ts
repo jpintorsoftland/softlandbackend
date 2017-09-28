@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
 import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { State, process } from '@progress/kendo-data-query';
-import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal';
 
 import { SHA1 } from 'crypto-js';
 
@@ -19,8 +19,10 @@ import { SHA1 } from 'crypto-js';
 export class UserComponent implements OnInit{
     @Input() usuarios = new Array<MobileUsuario>();
     @Input() clientes: Array<MobileCliente>;
-    @ViewChild('modal')
-    public modal: ModalComponent;
+    @ViewChild('confirmModal')
+    public confirmModal: ModalConfirmComponent;
+    public confirmModalTitle: string = "Eliminar aplicacion";
+    public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid
     public formGroup: FormGroup;
@@ -32,14 +34,14 @@ export class UserComponent implements OnInit{
 
     private state: State = {
         skip: 0,
-        take: 5
+        take: 12
     };
     private gridData: GridDataResult = process(this.usuarios, this.state);
-  
-      protected dataStateChange(state: DataStateChangeEvent): void {
-          this.state = state;
-          this.gridData = process(this.usuarios, this.state);
-      }
+
+    protected dataStateChange(state: DataStateChangeEvent): void {
+        this.state = state;
+        this.gridData = process(this.usuarios, this.state);
+    }
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -132,6 +134,7 @@ export class UserComponent implements OnInit{
 
         this.servicio.add(dataItem).subscribe(data => {
           this.usuarios.push(data);
+          this.gridData = process(this.usuarios, this.state);
         }, e =>{
               sessionStorage.removeItem("token");
               this.router.navigate(["/login"]);
@@ -151,14 +154,14 @@ export class UserComponent implements OnInit{
 
     protected removeHandler({dataItem}) {
       this.dataRemove = dataItem;
-      this.modal.open();
+      this.confirmModal.modal.open();
     }
 
     public remove(){
       if(this.dataRemove){
         this.servicio.delete(this.dataRemove.idUsuario).subscribe(data => {
             this.getList();
-            this.modal.close();
+            this.confirmModal.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
@@ -192,6 +195,16 @@ export class UserComponent implements OnInit{
       }
 
     }
+
+
+    public filtroCliente(idCliente: Number){
+      if(idCliente){
+          this.gridData = process(this.usuarios.filter(item => item.idCliente == idCliente), this.state);
+        }else{
+          this.gridData = process(this.usuarios, this.state);
+        }
+    }
+
 
     public showAsterisk()
     {

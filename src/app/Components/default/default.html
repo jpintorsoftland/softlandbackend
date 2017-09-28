@@ -61,7 +61,7 @@
 
 <div>
     <div>
-        <div class="col-sm-3" *ngIf="showMenu()">
+        <div class="col-sm-2" *ngIf="showMenu()">
         <div class="sidebar-nav">
             <div class="navbar navbar-default" role="navigation">
             <div class="navbar-header">
@@ -110,7 +110,8 @@
                             <a [routerLink]="['/modulos']">
                                 <i class="fa fa-window-restore fa-fw" aria-hidden="true"></i>&nbsp;Módulos</a></li>
                         
-                    <li [routerLinkActive]="['active']" 
+                    <li *ngIf="isConsultant" 
+                        [routerLinkActive]="['active']" 
                         [routerLinkActiveOptions]="{exact:true}">
                         <a [routerLink]="['/clientes']">
                             <i class="fa fa-handshake-o fa-fw" aria-hidden="true"></i>&nbsp;Clientes</a></li>
@@ -148,7 +149,7 @@
             </div>
         </div>
         </div>
-        <div class="col-sm-9">
+        <div class="col-sm-10">
             <router-outlet></router-outlet>
         </div>
     </div>

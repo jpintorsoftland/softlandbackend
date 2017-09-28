@@ -1,35 +1,79 @@
-import { Component, OnInit, Input, Inject, ViewChild } from '@angular/core';
+import { MobileAdminClientes } from './../../Classes/MobileAdminClientes';
+import { Component, OnInit, Input, Inject, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MobileCliente } from '../../Classes/MobileCliente';
 import { MobileProyecto } from '../../Classes/MobileProyecto'
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { FileRestrictions, SelectEvent, ClearEvent, RemoveEvent } from '@progress/kendo-angular-upload';
+import { ModalConfirmComponent } from '../modal/confirm-modal';
+
+const distinct = data => data
+  .map(x => x.MobileProyecto)
+  .filter((x, idx, xs) => xs.findIndex(y => y.descripcion === x.descripcion) === idx);
+
 
 @Component({
     selector: 'app',
     templateUrl: 'client.html'
 })
 export class ClientComponent implements OnInit{
-    @Input() gridData: Array<MobileCliente>;
+    @Input() clientes= new Array<MobileCliente>();
     @Input() proyectos: Array<MobileProyecto>;
-    @ViewChild('modal')
-    public modal: ModalComponent;
+    @ViewChild('confirmModal')
+    public confirmModal: ModalConfirmComponent;
+    @ViewChild('modalFile')
+    public modalFile: ModalComponent;
+    public confirmModalTitle: string = "Eliminar cliente";
+    public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid
     public formGroup: FormGroup;
     private editedRowIndex: number;
     public idEdited: number;
     private idAdmin: number;
+    private idRolAdmin: number;
     public dataRemove: any;
+    public visibleArchivo: boolean;
+    public visibleSubir: boolean;
+
+    //upload
+    public uploadSaveUrl: string = "../../../assets/uploads";
+    public uploadRemoveUrl: string = "removeUrl";
+    public uploadRestriction: FileRestrictions = {
+      allowedExtensions: [".csv"]
+    };
+  
+    public clearEventHandler(e: ClearEvent): void {
+      console.log("Clearing the file upload");
+    }
+  
+    public completeEventHandler() {
+      console.log("All files processed");
+    }
+    
+
+    private state: State = {
+      skip: 0,
+      take: 12
+    };
+    private gridData: GridDataResult = process(this.clientes, this.state);
+
+    protected dataStateChange(state: DataStateChangeEvent): void {
+        this.state = state;
+        this.gridData = process(this.clientes, this.state);
+    }
+
 
 
     constructor(private servicio: CRUDService, private router: Router){
         //servicio.urlRequest = environment.urlClients;
         this.idAdmin = Number( sessionStorage.getItem('idAdmin') );
+        this.idRolAdmin = Number( sessionStorage.getItem('idRolAdmin') );
     }
 
 
@@ -97,7 +141,8 @@ export class ClientComponent implements OnInit{
       let url = this.servicio.getUrl(uri);
 
       this.servicio.getList(url).subscribe(data => {
-        this.gridData = data;
+        this.clientes = data;
+        this.gridData = process(this.clientes, this.state);
       }, e => {
         sessionStorage.removeItem('token');
         this.router.navigate(['/login']);
@@ -110,7 +155,9 @@ export class ClientComponent implements OnInit{
       
       if(isNew){
         this.servicio.add(dataItem).subscribe(data => {
-          this.gridData.push(data);
+          if(this.idRolAdmin==2) this.asignClientToAdmin(this.idAdmin, data.idCliente);
+          this.clientes.push(data);
+          this.gridData = process(this.clientes, this.state);
         }, e =>{
               sessionStorage.removeItem("token");
               this.router.navigate(["/login"]);
@@ -128,16 +175,31 @@ export class ClientComponent implements OnInit{
       sender.closeRow(rowIndex);
     }
 
+    private asignClientToAdmin(idAdmin: number, idClient: number){
+      this.servicio.urlRequest = environment.urlUsersAsigned;
+      let dataItem = new MobileAdminClientes(0, idAdmin, idClient);
+      
+      this.servicio.add(dataItem).subscribe(data => {
+          console.log("Cliente asignado con éxito");
+          //reset clients url value
+          this.servicio.urlRequest = environment.urlClients;
+      }, e =>{
+            sessionStorage.removeItem("token");
+            this.router.navigate(["/login"]);
+      });
+
+    }
+
     protected removeHandler({dataItem}) {
       this.dataRemove = dataItem;
-      this.modal.open();
+      this.confirmModal.modal.open();
     }
 
     public remove(){
       if(this.dataRemove){
         this.servicio.delete(this.dataRemove.idCliente).subscribe(data => {
             this.getList();
-            this.modal.close();
+            this.confirmModal.modal.close();
         }, e =>{
             sessionStorage.removeItem("token");
             this.router.navigate(["/login"]);
@@ -166,6 +228,70 @@ export class ClientComponent implements OnInit{
       }
     }
     
+    public filtroProyecto(idProyecto: Number){
+        if(idProyecto){
+          this.gridData = process(this.clientes.filter(item => item.idProyecto == idProyecto), this.state);
+        }else{
+          this.gridData = process(this.clientes, this.state);
+        }
+    }
+
+    /***************************************************************************/
+
+
+    /***************************************************************************/
+    //subida masiva
+    public showModalFile(){
+      this.modalFile.open();
+    }
+
+    public changeFileInput($event) : void {
+      this.initInputFile($event.target);
+    }
+  
+    public initInputFile(inputValue: any) : void {
+      let file:File = inputValue.files[0]; 
+      let reader:FileReader = new FileReader();
+      let that = this;
+  
+      reader.onloadend = function(e){       
+        let lines = reader.result.split("\n");
+        that.ProcessFileClient(lines);
+      }
+  
+      reader.readAsText(file);
+    }
+
+    private ProcessFileClient(text: Array<string>){
+      let clients = new Array<MobileCliente>();
+
+      for(let x = 1; x < text.length; x++){
+        let campos = text[x].split(";");
+        let idProyecto = Number(campos[0]);
+        let codigoCliente = campos[1];
+        let nombreCliente = campos[2];
+
+        let client = new MobileCliente(0, idProyecto, codigoCliente, nombreCliente, true);
+        clients.push(client);
+      }
+
+      this.SendClientsList(clients);
+
+    }
+
+    private SendClientsList(clients: Array<MobileCliente>){
+      let uri  = environment.urlClients + "/sincronizacion";
+      let url = this.servicio.getUrl(uri);
+
+      this.servicio.add(clients, url).subscribe(data => {
+          this.confirmModal.modal.open();
+          this.getList();
+          this.modalFile.dismiss();
+      }, e =>{
+          sessionStorage.removeItem("token");
+          this.router.navigate(["/login"]);
+      });
+    }
     /***************************************************************************/
 
 }

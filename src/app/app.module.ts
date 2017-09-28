@@ -1,5 +1,6 @@
+import { MessageService } from '@progress/kendo-angular-l10n';
 import { BrowserModule } from '@angular/platform-browser';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,7 +11,9 @@ import { GridModule } from '@progress/kendo-angular-grid';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { InputsModule } from '@progress/kendo-angular-inputs';
+import { UploadModule } from '@progress/kendo-angular-upload';
 import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 
 //componnents
 import { LoginComponent } from './Components/login/login.component';
@@ -32,6 +35,7 @@ import { ModalConfirmComponent } from './Components/modal/confirm-modal';
 //services
 import { CRUDService } from './Services/CRUDService/CRUDService';
 import { AuthService } from './Services/AuthService/AuthService';
+import { MyMessageService } from './Services/MessageService/MessageService';
 //routing
 import { Routing } from './Routes/app-routing';
 import { AuthGuard } from './Guards/auth-guard';
@@ -68,7 +72,9 @@ import { ConsultantGuard } from "./Guards/consultant-guard";
       DropDownsModule,
       DateInputsModule,
       InputsModule,
-      Ng2Bs3ModalModule
+      UploadModule,
+      Ng2Bs3ModalModule,
+      BootstrapModalModule
     ],
   providers: [ 
       CRUDService,
@@ -76,7 +82,7 @@ import { ConsultantGuard } from "./Guards/consultant-guard";
       AuthGuard,
       SuperAdminGuard,
       ConsultantGuard,
-      //{ provide: LOCALE_ID, useValue: 'es' } 
+      { provide: MessageService, useClass: MyMessageService }
     ],
   bootstrap: 
     [ 

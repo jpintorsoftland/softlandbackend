@@ -12,7 +12,7 @@ export class MobileLicencia{
                 public codigoEmpresa: string,
                 public fechaInicio: Date,
                 public fechaFin: Date,
-                public caduca: string,
+                public caduca: boolean,
                 public workspaceID: string,
                 public accesKey: string,
                 public sesionesDisponibles: number,

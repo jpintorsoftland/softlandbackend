@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class DefaultComponent{
     public isSuperAdmin: boolean;
     public isConsultant: boolean;
+    public isAdminClient: boolean;
     public isLoged: boolean;
     public nombreAdmin: string;
         
@@ -41,14 +42,18 @@ export class DefaultComponent{
             case "1":
                 this.isSuperAdmin = true;
                 this.isConsultant = true;
+                this.isAdminClient = true;
                 break;
             case "2":
                 this.isConsultant = true;
+                this.isAdminClient = true;
+                break;
+            case "3":
+                this.isAdminClient = true;
                 break;
         }
 
         this.nombreAdmin = sessionStorage.getItem("nombreAdmin");
-        console.log("nombreAdmin " + this.nombreAdmin);
 
     }
 

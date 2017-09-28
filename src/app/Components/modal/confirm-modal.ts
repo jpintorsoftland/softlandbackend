@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, Output, Input, ViewChild, EventEmitter  } from '@angular/core';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 @Component({
@@ -7,33 +6,17 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
     templateUrl: 'confirm-modal.html'
 })
 
-export class ModalConfirmComponent implements OnInit{
-    @Output() showModal = new EventEmitter();
+export class ModalConfirmComponent {
+    @Input() title: string;
+    @Input() message: string;
+
+    @Output() acceptChanged: EventEmitter<number> =   new EventEmitter();
+    
+
     @ViewChild('modal')
-    modal: ModalComponent;
+    public modal: ModalComponent;
 
-    //grid
-    public formGroup: FormGroup;
-    private editedRowIndex: number;
-    public idEdited: number;
-    public dataRemove: any;
-
-
-    constructor(){
+    public aceptar(){
+      this.acceptChanged.emit();
     }
-
-    public ngOnInit(): void{
-        //
-    }
-  
-
-    public show(){
-        this.modal.open();
-    }
-
-    public remove() {
-      //
-    }
-    /***************************************************************************/
-
 }

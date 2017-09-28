@@ -1,17 +1,6 @@
-<modal #modal>
-        <modal-header [show-close]="true" >
-                <h4 class="modal-title">Eliminar registro</h4>
-        </modal-header>
-        <modal-body>
-                <div>
-                    ¿Está seguro de querer eliminar este registro?
-                </div>
-        </modal-body>
-        <modal-footer>
-                <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancelar</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="remove()">Aceptar</button>
-        </modal-footer>
-    </modal>
+<!-- confirmacion previa al borrado -->
+<confirm-modal #confirmModal [title]=confirmModalTitle [message]="confirmModalMessage" (acceptChanged)="remove()"></confirm-modal>
+
     
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -33,9 +22,9 @@
     </ng-template>
 
     <kendo-grid-column field="idProyecto" title="ID" width="40"></kendo-grid-column>
-    <kendo-grid-column field="descripcion" title="Descripcion" width="250"></kendo-grid-column>
+    <kendo-grid-column field="descripcion" title="Descripcion" width="400"></kendo-grid-column>
 
-    <kendo-grid-command-column title="Acciones" width="220">
+    <kendo-grid-command-column title="Acciones" width="120">
             <ng-template kendoGridCellTemplate let-isNew="isNew">
                 <button kendoGridEditCommand class="k-primary s-primary" title="Modificar">
                         <i class="k-icon fa fa-edit fa-fw"></i>

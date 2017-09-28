@@ -23,13 +23,13 @@ const appRoutes: Routes = [
     { path: "administradores", component: AdminComponent, canActivate: [AuthGuard, SuperAdminGuard] },
     { path: "administradores/clientes", component: AsignarClientesComponent, canActivate: [AuthGuard, SuperAdminGuard] },
     { path: "aplicaciones", component: ApplicationComponent, canActivate: [AuthGuard, SuperAdminGuard] },
-    { path: "clientes", component: ClientComponent, canActivate: [AuthGuard] },
+    { path: "clientes", component: ClientComponent, canActivate: [AuthGuard, ConsultantGuard] },
     { path: "instancias", component: InstanceComponent, canActivate: [AuthGuard] },
     { path: "empresas", component: CompanyComponent, canActivate: [AuthGuard] },
     { path: "modulos", component: ModuleComponent, canActivate: [AuthGuard, SuperAdminGuard] },
     { path: "usuarios", component: UserComponent, canActivate: [AuthGuard] },
     { path: "proyectos", component: ProjectComponent, canActivate: [AuthGuard] },
-    { path: "licencias", component: LicenseComponent, canActivate: [AuthGuard, ConsultantGuard] },
+    { path: "licencias", component: LicenseComponent, canActivate: [AuthGuard] },
     { path: "licencias/form", component: FormLicenseComponent, canActivate: [AuthGuard, ConsultantGuard] },
     { path: "**", redirectTo: ""}
 ];
