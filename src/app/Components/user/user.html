@@ -1,6 +1,10 @@
 <!-- confirmacion previa al borrado -->
 <confirm-modal #confirmModal [title]=confirmModalTitle [message]="confirmModalMessage" (acceptChanged)="remove()"></confirm-modal>
     
+<!-- modal subida de archivo -->
+<file-modal #fileModal (processFile)="ProcessFileClient($event)"></file-modal>
+
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <p class="labelTitle">Usuarios</p>
@@ -26,13 +30,44 @@
     (dataStateChange)="dataStateChange($event)">
 
     <ng-template kendoGridToolbarTemplate>
-        <button kendoGridAddCommand><i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nuevo</button>
+        <button kendoGridAddCommand class="k-primary s-primary">
+            <i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nuevo</button>
+
+        <button (click)="showModalFile()"
+            class="k-button s-button floatRight" title="Subir archivo">
+            <i class="k-icon fa fa-file-excel-o fa-fw whiteText"></i>&nbsp;Desde archivo
+        </button>
+
     </ng-template>
      
     <kendo-grid-column field="idUsuario" [filterable]="false" title="ID" width="40"></kendo-grid-column>
-    <kendo-grid-column field="codigoUsuario" title="Código" width="140"></kendo-grid-column>
-    <kendo-grid-column field="nombreUsuario" title="Nombre Usuario" width="280"></kendo-grid-column>
-    <kendo-grid-column field="email" title="E-mail" width="180"></kendo-grid-column>
+    <kendo-grid-column field="codigoUsuario" title="Código" width="140">
+        <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
+            <kendo-grid-string-filter-cell
+                [showOperators]="false"
+                [column]="column"
+                [filter]="filter">
+            </kendo-grid-string-filter-cell>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="nombreUsuario" title="Nombre Usuario" width="280">
+        <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
+            <kendo-grid-string-filter-cell
+                [showOperators]="false"
+                [column]="column"
+                [filter]="filter">
+            </kendo-grid-string-filter-cell>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="email" title="E-mail" width="180">
+        <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
+            <kendo-grid-string-filter-cell
+                [showOperators]="false"
+                [column]="column"
+                [filter]="filter">
+            </kendo-grid-string-filter-cell>
+        </ng-template>
+    </kendo-grid-column>
 
     <kendo-grid-column field="password" 
             [filterable]="false" 

@@ -31,6 +31,7 @@ import { FormLicenseComponent } from './Components/license/form-license.componen
 import { InstanceComponent } from './Components/instance/instance.component';
 import { CompanyComponent } from './Components/company/company.component';
 import { ModalConfirmComponent } from './Components/modal/confirm-modal';
+import { ModalFileComponent } from './Components/modal/file-modal';
 
 //services
 import { CRUDService } from './Services/CRUDService/CRUDService';
@@ -58,7 +59,8 @@ import { ConsultantGuard } from "./Guards/consultant-guard";
       ProjectComponent,
       InstanceComponent,
       CompanyComponent,
-      ModalConfirmComponent
+      ModalConfirmComponent,
+      ModalFileComponent
   ],
   imports: [
       BrowserModule,

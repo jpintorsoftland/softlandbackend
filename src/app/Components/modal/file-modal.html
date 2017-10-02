@@ -1,0 +1,24 @@
+<modal #modal>
+    <modal-header [show-close]="true" >
+            <h4 class="modal-title">Añadir desde archivo
+            </h4>
+    </modal-header>
+    <modal-body>
+            <div>
+                <p>
+                    Puede añadir registros de manera masiva, desde un archivo css, separado por ";"
+                </p>
+                
+                <p>
+                    <br>
+
+                    <input type="file" (change)="changeFileInput($event)"> 
+
+                </p>
+
+            </div>
+    </modal-body>
+    <modal-footer>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancelar</button>
+    </modal-footer>
+</modal>  

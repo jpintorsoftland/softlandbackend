@@ -1,30 +1,9 @@
-<!-- confirmacion previa al borrado -->
+<!-- modal confirmacion previa al borrado -->
 <confirm-modal #confirmModal [title]=confirmModalTitle [message]="confirmModalMessage" (acceptChanged)="remove()"></confirm-modal>
 
-<modal #modalFile>
-    <modal-header [show-close]="true" >
-            <h4 class="modal-title">Añadir desde archivo
-            </h4>
-    </modal-header>
-    <modal-body>
-            <div>
-                <p>
-                    Puede añadir registrosa de manera masiva, desde un archivo css, separado por ";"
-                </p>
-                
-                <p>
-                    <br>
+<!-- modal subida de archivo -->
+<file-modal #fileModal (processFile)="ProcessFileClient($event)"></file-modal>
 
-                    <input type="file" (change)="changeFileInput($event)"> 
-                </p>
-
-
-            </div>
-    </modal-body>
-    <modal-footer>
-            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancelar</button>
-    </modal-footer>
-</modal>  
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -52,11 +31,11 @@
 
     <ng-template kendoGridToolbarTemplate>
 
-        <button kendoGridAddCommand>
+        <button kendoGridAddCommand class="k-primary s-primary">
             <i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nuevo</button>
     
-        <button (click)="showModalFile()" style="float:right"
-            class="k-button s-button" title="Subir archivo">
+        <button (click)="showModalFile()"
+            class="k-button s-button floatRight" title="Subir archivo">
             <i class="k-icon fa fa-file-excel-o fa-fw whiteText"></i>&nbsp;Desde archivo
         </button>
 

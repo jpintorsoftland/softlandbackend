@@ -27,12 +27,29 @@
     (dataStateChange)="dataStateChange($event)">
 
     <ng-template kendoGridToolbarTemplate>
-        <button kendoGridAddCommand><i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nueva</button>
+        <button kendoGridAddCommand class="k-primary s-primary">
+            <i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nueva</button>
     </ng-template>
 
     <kendo-grid-column field="idEmpresa" title="ID" width="40" [filterable]="false"></kendo-grid-column>
-    <kendo-grid-column field="codigoEmpresa" title="Código" width="120"></kendo-grid-column>
-    <kendo-grid-column field="nombreEmpresa" title="Nombre" width="200"></kendo-grid-column>
+    <kendo-grid-column field="codigoEmpresa" title="Código" width="120">
+        <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
+            <kendo-grid-string-filter-cell
+                [showOperators]="false"
+                [column]="column"
+                [filter]="filter">
+            </kendo-grid-string-filter-cell>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="nombreEmpresa" title="Nombre" width="200">
+        <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
+            <kendo-grid-string-filter-cell
+                [showOperators]="false"
+                [column]="column"
+                [filter]="filter">
+            </kendo-grid-string-filter-cell>
+        </ng-template>
+    </kendo-grid-column>
 
 
     <kendo-grid-column field="idCliente" title="Cliente" width="200">

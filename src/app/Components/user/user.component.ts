@@ -9,6 +9,7 @@ import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/k
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { State, process } from '@progress/kendo-data-query';
 import { ModalConfirmComponent } from '../modal/confirm-modal';
+import { ModalFileComponent } from '../modal/file-modal';
 
 import { SHA1 } from 'crypto-js';
 
@@ -21,6 +22,8 @@ export class UserComponent implements OnInit{
     @Input() clientes: Array<MobileCliente>;
     @ViewChild('confirmModal')
     public confirmModal: ModalConfirmComponent;
+    @ViewChild('fileModal')
+    public modalFile: ModalFileComponent;
     public confirmModalTitle: string = "Eliminar aplicacion";
     public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
@@ -212,5 +215,45 @@ export class UserComponent implements OnInit{
     }
     
     /***************************************************************************/
+
+    /***************************************************************************/
+    //subida masiva
+    public showModalFile(){
+      this.modalFile.modal.open();
+    }
+
+    private ProcessFileClient(text: Array<string>){
+      let users = new Array<MobileUsuario>();
+
+      for(let x = 1; x < text.length; x++){
+        let campos = text[x].split(";");
+        let codigoUsuario = campos[0];
+        let codigoCliente = campos[1];
+        let nombreUsuario = campos[2];
+        let email = campos[3];
+        let password = SHA1(campos[4]).toString().trim();
+
+        let user = new MobileUsuario(0, 0, codigoUsuario, codigoCliente, nombreUsuario, email, password, true);
+        users.push(user);
+      }
+
+      this.SendUsersList(users);
+
+    }
+
+    private SendUsersList(users: Array<MobileUsuario>){
+      let uri  = environment.urlUsers + "/sincronizacion";
+      let url = this.servicio.getUrl(uri);
+
+      this.servicio.add(users, url).subscribe(data => {
+          this.getList();
+          this.modalFile.modal.close();
+      }, e =>{
+          sessionStorage.removeItem("token");
+          this.router.navigate(["/login"]);
+      });
+    }
+    /***************************************************************************/
+
 
 }

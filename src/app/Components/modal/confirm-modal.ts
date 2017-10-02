@@ -10,7 +10,7 @@ export class ModalConfirmComponent {
     @Input() title: string;
     @Input() message: string;
 
-    @Output() acceptChanged: EventEmitter<number> =   new EventEmitter();
+    @Output() acceptChanged: EventEmitter<number> = new EventEmitter();
     
 
     @ViewChild('modal')

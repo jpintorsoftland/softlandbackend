@@ -1,8 +1,9 @@
-import { MobileAdminClientes } from './../../Classes/MobileAdminClientes';
 import { Component, OnInit, Input, Inject, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MobileCliente } from '../../Classes/MobileCliente';
-import { MobileProyecto } from '../../Classes/MobileProyecto'
+import { MobileProyecto } from '../../Classes/MobileProyecto';
+import { MobileAdminClientes } from './../../Classes/MobileAdminClientes';
+import { MobileResultadoSincronizacion } from './../../Classes/MobileResultadoSincronizacion';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
@@ -11,7 +12,8 @@ import { State, process } from '@progress/kendo-data-query';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { FileRestrictions, SelectEvent, ClearEvent, RemoveEvent } from '@progress/kendo-angular-upload';
 import { ModalConfirmComponent } from '../modal/confirm-modal';
-
+import { ModalFileComponent } from '../modal/file-modal';
+ 
 const distinct = data => data
   .map(x => x.MobileProyecto)
   .filter((x, idx, xs) => xs.findIndex(y => y.descripcion === x.descripcion) === idx);
@@ -22,12 +24,12 @@ const distinct = data => data
     templateUrl: 'client.html'
 })
 export class ClientComponent implements OnInit{
-    @Input() clientes= new Array<MobileCliente>();
+    @Input() clientes = new Array<MobileCliente>();
     @Input() proyectos: Array<MobileProyecto>;
     @ViewChild('confirmModal')
     public confirmModal: ModalConfirmComponent;
-    @ViewChild('modalFile')
-    public modalFile: ModalComponent;
+    @ViewChild('fileModal')
+    public modalFile: ModalFileComponent;
     public confirmModalTitle: string = "Eliminar cliente";
     public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
@@ -242,9 +244,10 @@ export class ClientComponent implements OnInit{
     /***************************************************************************/
     //subida masiva
     public showModalFile(){
-      this.modalFile.open();
+      this.modalFile.modal.open();
     }
 
+    /*
     public changeFileInput($event) : void {
       this.initInputFile($event.target);
     }
@@ -261,6 +264,7 @@ export class ClientComponent implements OnInit{
   
       reader.readAsText(file);
     }
+    */
 
     private ProcessFileClient(text: Array<string>){
       let clients = new Array<MobileCliente>();
@@ -269,7 +273,7 @@ export class ClientComponent implements OnInit{
         let campos = text[x].split(";");
         let idProyecto = Number(campos[0]);
         let codigoCliente = campos[1];
-        let nombreCliente = campos[2];
+        let nombreCliente = campos[2].trim();
 
         let client = new MobileCliente(0, idProyecto, codigoCliente, nombreCliente, true);
         clients.push(client);
@@ -284,13 +288,37 @@ export class ClientComponent implements OnInit{
       let url = this.servicio.getUrl(uri);
 
       this.servicio.add(clients, url).subscribe(data => {
-          this.confirmModal.modal.open();
+          console.log("sendClientList: " + JSON.stringify(data));
+          if(this.idRolAdmin==2) this.asignClientListToAdmin(this.idAdmin, data);
           this.getList();
-          this.modalFile.dismiss();
+          this.modalFile.modal.close();
       }, e =>{
           sessionStorage.removeItem("token");
           this.router.navigate(["/login"]);
       });
+    }
+
+
+    private asignClientListToAdmin(idAdmin: number, clients: Array<MobileResultadoSincronizacion>){
+      this.servicio.urlRequest = environment.urlUsersAsigned + "/sincronizacion";
+
+      let asignedClients = new Array<MobileAdminClientes>();
+      for(let client of clients)
+      {
+        console.log("asignar cliente. admin: " + this.idAdmin + " - cliente " + client.id);
+        let item = new MobileAdminClientes(0, idAdmin, client.id);
+        asignedClients.push(item);
+      }
+      
+      this.servicio.add(asignedClients).subscribe(data => {
+          console.log("Cliente asignado con éxito");
+          //reset clients url value
+          this.servicio.urlRequest = environment.urlClients;
+      }, e =>{
+            sessionStorage.removeItem("token");
+            this.router.navigate(["/login"]);
+      });
+
     }
     /***************************************************************************/
 
