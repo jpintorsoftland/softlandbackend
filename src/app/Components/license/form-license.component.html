@@ -102,42 +102,6 @@
                             
                         </label>
                         <label class="k-form-field">
-                            <span>Sesiones contratadas</span>
-                            <kendo-numerictextbox
-                                class="fillParent"
-                                [(ngModel)]="licencia.sesionesDisponibles" 
-                                [decimals]="0"
-                                [min]="0"
-                                name="sesionesDisponibles" >
-                            </kendo-numerictextbox>
-                        </label>
-                        <label class="k-form-field">
-                            <span>Sesiones consumidas</span>
-                            <kendo-numerictextbox
-                                class="fillParent"
-                                [(ngModel)]="licencia.sesionesEnUso"
-                                [decimals]="0"
-                                [min]="0" 
-                                name="sesionesEnUso"
-                                [disabled]="true" >
-                            </kendo-numerictextbox>
-                        </label>
-                        <label class="k-form-field">
-                            <span>Access Key</span>
-                            <textarea
-                                name="accessKey" 
-                                class="k-textarea fillParent" 
-                                [(ngModel)]="licencia.accessKey" >
-                            </textarea>
-                        </label>
-                        <label class="k-form-field">
-                            <span>Workspace</span>
-                            <input type="text" 
-                                [(ngModel)]="licencia.workspaceID"
-                                class="k-textbox" 
-                                name="workspace" />
-                        </label>
-                        <label class="k-form-field">
                             <div class="col-md-6 noPadding">
                                 <span>Caduca</span>
                                 <input type="checkbox" 

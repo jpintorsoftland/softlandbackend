@@ -14,7 +14,7 @@ import { SHA1 } from 'crypto-js';
 
 @Component({
     selector: 'app',
-    templateUrl: 'asignar_clientes.html'
+    templateUrl: 'asignar-clientes.component.html'
 })
 export class AsignarClientesComponent implements OnInit{
     private idAdmin: number;

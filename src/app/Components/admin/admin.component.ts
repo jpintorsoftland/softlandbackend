@@ -7,13 +7,13 @@ import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
-import { ModalConfirmComponent } from '../modal/confirm-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal.component';
 
 import { SHA1 } from 'crypto-js';
 
 @Component({
     selector: 'app',
-    templateUrl: 'admin.html'
+    templateUrl: 'admin.component.html'
 })
 export class AdminComponent implements OnInit{
     @Input() administradores = new Array<MobileAdmin>();

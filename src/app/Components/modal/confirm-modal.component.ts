@@ -3,7 +3,7 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 @Component({
     selector: 'confirm-modal',
-    templateUrl: 'confirm-modal.html'
+    templateUrl: 'confirm-modal.component.html'
 })
 
 export class ModalConfirmComponent {

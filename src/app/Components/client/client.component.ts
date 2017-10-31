@@ -11,8 +11,8 @@ import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/k
 import { State, process } from '@progress/kendo-data-query';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { FileRestrictions, SelectEvent, ClearEvent, RemoveEvent } from '@progress/kendo-angular-upload';
-import { ModalConfirmComponent } from '../modal/confirm-modal';
-import { ModalFileComponent } from '../modal/file-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal.component';
+import { ModalFileComponent } from '../modal/file-modal.component';
  
 const distinct = data => data
   .map(x => x.MobileProyecto)
@@ -21,7 +21,7 @@ const distinct = data => data
 
 @Component({
     selector: 'app',
-    templateUrl: 'client.html'
+    templateUrl: 'client.component.html'
 })
 export class ClientComponent implements OnInit{
     @Input() clientes = new Array<MobileCliente>();

@@ -15,13 +15,13 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 @Component({
     selector: 'app',
-    templateUrl: 'form-license.html'
+    templateUrl: 'form-license.component.html'
 })
 export class FormLicenseComponent implements OnInit{
     private idLicencia: number;
     private isNew: boolean;
     private idAdmin: number;
-    @Input() licencia: MobileLicencia = new MobileLicencia(0, 0, 0, 0, 0, 0, "", "", "", "", new Date(), new Date(), false, "", "", 0, 0, true);
+    @Input() licencia: MobileLicencia = new MobileLicencia(0, 0, 0, 0, 0, 0, "", "", "", "", new Date(), new Date(), false, true);
     @Input() clientes: Array<MobileCliente>;
     @Input() instancias: Array<MobileInstancia>;
     @Input() empresas: Array<MobileEmpresa>;

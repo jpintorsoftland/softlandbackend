@@ -13,10 +13,6 @@ export class MobileLicencia{
                 public fechaInicio: Date,
                 public fechaFin: Date,
                 public caduca: boolean,
-                public workspaceID: string,
-                public accesKey: string,
-                public sesionesDisponibles: number,
-                public sesionesEnUso: number,
                 public activo: boolean){
 
     }

@@ -6,11 +6,11 @@ import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
-import { ModalConfirmComponent } from '../modal/confirm-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal.component';
 
 @Component({
     selector: 'app',
-    templateUrl: 'project.html'
+    templateUrl: 'project.component.html'
 })
 export class ProjectComponent implements OnInit{
     @Input() gridData: Array<MobileProyecto>;

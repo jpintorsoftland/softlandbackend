@@ -8,11 +8,11 @@ import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
 import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
-import { ModalConfirmComponent } from '../modal/confirm-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal.component';
 
 @Component({
     selector: 'app',
-    templateUrl: 'company.html'
+    templateUrl: 'company.component.html'
 })
 export class CompanyComponent implements OnInit{
     @Input() empresas = new Array<MobileEmpresa>();

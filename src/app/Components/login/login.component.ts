@@ -10,7 +10,7 @@ import { SHA1 } from 'crypto-js';
 
 @Component({
     moduleId: module.id,
-    templateUrl: 'login.html',
+    templateUrl: 'login.component.html',
     selector: 'app'
 })
 

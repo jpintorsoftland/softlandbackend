@@ -2,7 +2,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { LoginComponent } from '../Components/login/login.component';
 import { AppComponent } from "../Components/main/app.component";
 import { AdminComponent } from "../Components/admin/admin.component";
-import { AsignarClientesComponent } from "../Components/admin/asignar_clientes.component";
+import { AsignarClientesComponent } from "../Components/admin/asignar-clientes.component";
 import { ApplicationComponent } from "../Components/application/application.component";
 import { ClientComponent } from "../Components/client/client.component";
 import { ModuleComponent } from "../Components/module/module.component";

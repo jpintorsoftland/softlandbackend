@@ -8,14 +8,14 @@ import { environment } from '../../../environments/environment';
 import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { State, process } from '@progress/kendo-data-query';
-import { ModalConfirmComponent } from '../modal/confirm-modal';
-import { ModalFileComponent } from '../modal/file-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal.component';
+import { ModalFileComponent } from '../modal/file-modal.component';
 
 import { SHA1 } from 'crypto-js';
 
 @Component({
     selector: 'app',
-    templateUrl: 'user.html'
+    templateUrl: 'user.component.html'
 })
 export class UserComponent implements OnInit{
     @Input() usuarios = new Array<MobileUsuario>();

@@ -19,7 +19,7 @@ import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { LoginComponent } from './Components/login/login.component';
 import { DefaultComponent } from './Components/default/default.component';
 import { AdminComponent } from './Components/admin/admin.component';
-import { AsignarClientesComponent } from "./Components/admin/asignar_clientes.component";
+import { AsignarClientesComponent } from "./Components/admin/asignar-clientes.component";
 import { AppComponent } from './Components/main/app.component';
 import { ApplicationComponent } from './Components/application/application.component';
 import { ClientComponent } from './Components/client/client.component';
@@ -30,8 +30,8 @@ import { LicenseComponent } from './Components/license/license.component';
 import { FormLicenseComponent } from './Components/license/form-license.component';
 import { InstanceComponent } from './Components/instance/instance.component';
 import { CompanyComponent } from './Components/company/company.component';
-import { ModalConfirmComponent } from './Components/modal/confirm-modal';
-import { ModalFileComponent } from './Components/modal/file-modal';
+import { ModalConfirmComponent } from './Components/modal/confirm-modal.component';
+import { ModalFileComponent } from './Components/modal/file-modal.component';
 
 //services
 import { CRUDService } from './Services/CRUDService/CRUDService';

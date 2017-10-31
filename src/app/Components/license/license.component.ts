@@ -12,11 +12,11 @@ import { environment } from '../../../environments/environment';
 import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 import { DatePipe } from '@angular/common';
-import { ModalConfirmComponent } from '../modal/confirm-modal';
+import { ModalConfirmComponent } from '../modal/confirm-modal.component';
 
 @Component({
     selector: 'app',
-    templateUrl: 'license.html'
+    templateUrl: 'license.component.html'
 })
 export class LicenseComponent implements OnInit{
     @Input() licencias = new Array<MobileLicencia>();

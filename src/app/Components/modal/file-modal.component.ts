@@ -3,7 +3,7 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 @Component({
     selector: 'file-modal',
-    templateUrl: 'file-modal.html'
+    templateUrl: 'file-modal.component.html'
 })
 
 export class ModalFileComponent {
