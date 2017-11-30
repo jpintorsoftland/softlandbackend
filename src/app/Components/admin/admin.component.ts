@@ -20,7 +20,7 @@ export class AdminComponent implements OnInit{
     @Input() roles = Array<MobileRolAdmin>();
     @ViewChild('confirmModal')
     public confirmModal: ModalConfirmComponent;
-    public confirmModalTitle: string = "Eliminar adsministrador";
+    public confirmModalTitle: string = "Eliminar administrador";
     public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid

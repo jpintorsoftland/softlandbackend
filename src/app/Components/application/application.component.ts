@@ -16,7 +16,7 @@ export class ApplicationComponent implements OnInit{
     @Input() gridData: Array<MobileAplicacion>;
     @ViewChild('confirmModal')
     public confirmModal: ModalConfirmComponent;
-    public confirmModalTitle: string = "Eliminar aplicacion";
+    public confirmModalTitle: string = "Eliminar aplicación";
     public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid
