@@ -32,18 +32,18 @@ export class LicenseComponent implements OnInit{
 
     //grid
     public formGroup: FormGroup;
-    private editedRowIndex: number;
+    public editedRowIndex: number;
     public idEdited: number;
-    private idAdmin: number;
+    public idAdmin: number;
     public dataRemove: any;
 
-    private state: State = {
+    public state: State = {
       skip: 0,
       take: 12
     };
-    private gridData: GridDataResult = process(this.licencias, this.state);
+    public gridData: GridDataResult = process(this.licencias, this.state);
 
-    protected dataStateChange(state: DataStateChangeEvent): void {
+    public dataStateChange(state: DataStateChangeEvent): void {
         this.state = state;
         this.gridData = process(this.licencias, this.state);
     }
@@ -84,7 +84,7 @@ export class LicenseComponent implements OnInit{
   
     /***************************************************************************/
     //buttons actions 
-    protected addHandler({sender}) {
+    public addHandler({sender}) {
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
@@ -106,7 +106,7 @@ export class LicenseComponent implements OnInit{
       sender.addRow(this.formGroup);
     }
 
-    protected editHandler({sender, rowIndex, dataItem}) {
+    public editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
@@ -132,11 +132,11 @@ export class LicenseComponent implements OnInit{
     }
     
 
-    protected cancelHandler({sender, rowIndex}) {
+    public cancelHandler({sender, rowIndex}) {
       this.closeEditor(sender, rowIndex);
     }
 
-    private closeEditor(grid, rowIndex = this.editedRowIndex) {
+    public closeEditor(grid, rowIndex = this.editedRowIndex) {
       grid.closeRow(rowIndex);
       this.editedRowIndex = undefined;
       this.formGroup = undefined;
@@ -164,7 +164,7 @@ export class LicenseComponent implements OnInit{
 
     }
 
-    protected saveHandler({sender, rowIndex, formGroup, isNew}) {
+    public saveHandler({sender, rowIndex, formGroup, isNew}) {
       const dataItem: MobileLicencia = formGroup.value;
 
       if(isNew){
@@ -189,7 +189,7 @@ export class LicenseComponent implements OnInit{
       sender.closeRow(rowIndex);
     }
 
-    protected removeHandler({dataItem}) {
+    public removeHandler({dataItem}) {
       this.dataRemove = dataItem;
       this.confirmModal.modal.open();
     }

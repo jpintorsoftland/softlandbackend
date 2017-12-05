@@ -4,6 +4,9 @@
 <!-- modal subida de archivo -->
 <file-modal #fileModal (processFile)="ProcessFileClient($event)"></file-modal>
 
+<!-- modal ok -->
+<ok-modal #okModal></ok-modal>
+
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -115,7 +118,9 @@
             <button kendoGridCancelCommand class="s-button" title="{{ isNew ? 'Descartar' : 'Cancelar' }}">
                     <i class="k-icon fa fa-remove fa-fw"></i>
             </button>
-            <button kendoGridSaveCommand class="k-primary s-primary" title="{{ isNew ? 'Añadir' : 'Guardar' }}">
+            <button kendoGridSaveCommand class="k-primary s-primary"
+                    [disabled]="formGroup?.invalid"  
+                    title="{{ isNew ? 'Añadir' : 'Guardar' }}">
                     <i class="k-icon fa fa-save fa-fw"></i>
             </button>
         </ng-template>

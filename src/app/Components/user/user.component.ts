@@ -10,8 +10,10 @@ import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { State, process } from '@progress/kendo-data-query';
 import { ModalConfirmComponent } from '../modal/confirm-modal.component';
 import { ModalFileComponent } from '../modal/file-modal.component';
+import { ModalOkComponent } from '../modal/ok-modal.component';
 
 import { SHA1 } from 'crypto-js';
+import { validateConfig } from '@angular/router/src/config';
 
 @Component({
     selector: 'app',
@@ -26,22 +28,24 @@ export class UserComponent implements OnInit{
     public modalFile: ModalFileComponent;
     public confirmModalTitle: string = "Eliminar aplicacion";
     public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
+    @ViewChild('okModal')
+    public okModal: ModalOkComponent;
 
     //grid
     public formGroup: FormGroup;
-    private editedRowIndex: number;
+    public editedRowIndex: number;
     public idEdited: number;
-    private idAdmin: number;
+    public idAdmin: number;
     public dataRemove: any;
 
 
-    private state: State = {
+    public state: State = {
         skip: 0,
         take: 12
     };
-    private gridData: GridDataResult = process(this.usuarios, this.state);
+    public gridData: GridDataResult = process(this.usuarios, this.state);
 
-    protected dataStateChange(state: DataStateChangeEvent): void {
+    public dataStateChange(state: DataStateChangeEvent): void {
         this.state = state;
         this.gridData = process(this.usuarios, this.state);
     }
@@ -65,32 +69,32 @@ export class UserComponent implements OnInit{
   
     /***************************************************************************/
     //buttons actions 
-    protected addHandler({sender}) {
+    public addHandler({sender}) {
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
           'idCliente': new FormControl(1),
-          'codigoUsuario': new FormControl(""),
+          'codigoUsuario': new FormControl("", Validators.required),
           'codigoCliente': new FormControl(""),
-          'nombreUsuario': new FormControl(""),
-          'email': new FormControl(""),
-          'password': new FormControl(""),
-          'activo': new FormControl(true)
+          'nombreUsuario': new FormControl("", Validators.required),
+          'email': new FormControl("", Validators.required),
+          'password': new FormControl("", Validators.required),
+          'activo': new FormControl(true, Validators.required)
       });
       sender.addRow(this.formGroup);
     }
 
-    protected editHandler({sender, rowIndex, dataItem}) {
+    public editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
       this.idEdited = dataItem.idUsuario;
       this.formGroup = new FormGroup({
-        'idCliente': new FormControl(dataItem.idCliente),
-        'codigoUsuario': new FormControl(dataItem.codigoUsuario),
+        'idCliente': new FormControl(dataItem.idCliente, Validators.required),
+        'codigoUsuario': new FormControl(dataItem.codigoUsuario, Validators.required),
         'codigoCliente': new FormControl(dataItem.codigoCliente),
-        'nombreUsuario': new FormControl(dataItem.nombreUsuario),
-        'email': new FormControl(dataItem.email),
-        'activo': new FormControl(dataItem.activo)
+        'nombreUsuario': new FormControl(dataItem.nombreUsuario, Validators.required),
+        'email': new FormControl(dataItem.email, Validators.required),
+        'activo': new FormControl(dataItem.activo, Validators.required)
       });
 
       this.editedRowIndex = rowIndex;
@@ -100,11 +104,11 @@ export class UserComponent implements OnInit{
     }
     
 
-    protected cancelHandler({sender, rowIndex}) {
+    public cancelHandler({sender, rowIndex}) {
       this.closeEditor(sender, rowIndex);
     }
 
-    private closeEditor(grid, rowIndex = this.editedRowIndex) {
+    public closeEditor(grid, rowIndex = this.editedRowIndex) {
       grid.closeRow(rowIndex);
       this.editedRowIndex = undefined;
       this.formGroup = undefined;
@@ -129,7 +133,7 @@ export class UserComponent implements OnInit{
 
     }
 
-    protected saveHandler({sender, rowIndex, formGroup, isNew}) {
+    public saveHandler({sender, rowIndex, formGroup, isNew}) {
       const dataItem: MobileUsuario = formGroup.value;
 
       if(isNew){
@@ -155,7 +159,7 @@ export class UserComponent implements OnInit{
       sender.closeRow(rowIndex);
     }
 
-    protected removeHandler({dataItem}) {
+    public removeHandler({dataItem}) {
       this.dataRemove = dataItem;
       this.confirmModal.modal.open();
     }
@@ -222,7 +226,7 @@ export class UserComponent implements OnInit{
       this.modalFile.modal.open();
     }
 
-    private ProcessFileClient(text: Array<string>){
+    public ProcessFileClient(text: Array<string>){
       let users = new Array<MobileUsuario>();
 
       for(let x = 1; x < text.length; x++){
@@ -241,13 +245,14 @@ export class UserComponent implements OnInit{
 
     }
 
-    private SendUsersList(users: Array<MobileUsuario>){
+    public SendUsersList(users: Array<MobileUsuario>){
       let uri  = environment.urlUsers + "/sincronizacion";
       let url = this.servicio.getUrl(uri);
 
       this.servicio.add(users, url).subscribe(data => {
           this.getList();
           this.modalFile.modal.close();
+          this.okModal.modal.open();
       }, e =>{
           sessionStorage.removeItem("token");
           this.router.navigate(["/login"]);

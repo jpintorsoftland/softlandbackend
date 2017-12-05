@@ -11,7 +11,7 @@ import { MobileTipoPermiso } from '../../Classes/MobileTipoPermiso';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
-import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { ModalOkComponent } from '../modal/ok-modal.component';
 
 @Component({
     selector: 'app',
@@ -27,8 +27,10 @@ export class FormLicenseComponent implements OnInit{
     @Input() empresas: Array<MobileEmpresa>;
     @Input() modulos: Array<MobileModulo>;
     @Input() tipos_permiso: Array<MobileTipoPermiso>;
-    @ViewChild('modal')
-    public modal: ModalComponent;
+    //@ViewChild('modal')
+    //public modal: ModalComponent;
+    @ViewChild('okModal')
+    public okModal: ModalOkComponent;
     
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -226,7 +228,7 @@ export class FormLicenseComponent implements OnInit{
               });
         }else{
           this.servicio.update(this.licencia, this.licencia.idLicencia).subscribe(data => {
-              this.modal.open();
+              this.okModal.modal.open();
               this.getLicencia();
           }, e =>{
               sessionStorage.removeItem("token");

@@ -8,7 +8,7 @@ import { MobileCliente } from './../../Classes/MobileCliente';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
-import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+import { ModalOkComponent } from '../modal/ok-modal.component';
 
 import { SHA1 } from 'crypto-js';
 
@@ -21,8 +21,8 @@ export class AsignarClientesComponent implements OnInit{
     @Input() nombreAdmin: string;
     @Input() clientes: Array<MobileCliente>;
     @Input() clientes_asignados: Array<MobileAdminClientes>;
-    @ViewChild('modal')
-    public modal: ModalComponent;
+    @ViewChild('okModal')
+    public okModal: ModalOkComponent;
     
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -112,7 +112,7 @@ export class AsignarClientesComponent implements OnInit{
         let url = this.servicio.getUrl(uri);
 
         this.servicio.add(asignados, url).subscribe(data => {
-            this.modal.open();
+            this.okModal.modal.open();
             this.getListClientesAsignados();
         }, e =>{
             sessionStorage.removeItem("token");

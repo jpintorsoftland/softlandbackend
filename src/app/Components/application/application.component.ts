@@ -4,7 +4,7 @@ import { MobileAplicacion } from '../../Classes/MobileAplicacion';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 import { ModalConfirmComponent } from '../modal/confirm-modal.component';
 
@@ -13,7 +13,7 @@ import { ModalConfirmComponent } from '../modal/confirm-modal.component';
     templateUrl: 'application.component.html'
 })
 export class ApplicationComponent implements OnInit{
-    @Input() gridData: Array<MobileAplicacion>;
+    @Input() aplicaciones = new Array<MobileAplicacion>();
     @ViewChild('confirmModal')
     public confirmModal: ModalConfirmComponent;
     public confirmModalTitle: string = "Eliminar aplicación";
@@ -21,9 +21,21 @@ export class ApplicationComponent implements OnInit{
 
     //grid
     public formGroup: FormGroup;
-    private editedRowIndex: number;
+    public editedRowIndex: number;
     public idEdited: number;
     public dataRemove: any;
+
+
+    public state: State = {
+      skip: 0,
+      take: 12
+    };
+    public gridData: GridDataResult = process(this.aplicaciones, this.state);
+
+    public dataStateChange(state: DataStateChangeEvent): void {
+        this.state = state;
+        this.gridData = process(this.aplicaciones, this.state);
+    }
 
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -38,7 +50,7 @@ export class ApplicationComponent implements OnInit{
   
     /***************************************************************************/
     //buttons actions 
-    protected addHandler({sender}) {
+    public addHandler({sender}) {
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
@@ -48,7 +60,7 @@ export class ApplicationComponent implements OnInit{
       sender.addRow(this.formGroup);
     }
 
-    protected editHandler({sender, rowIndex, dataItem}) {
+    public editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
       this.idEdited = dataItem.idAplicacion;
@@ -63,11 +75,11 @@ export class ApplicationComponent implements OnInit{
     }
     
 
-    protected cancelHandler({sender, rowIndex}) {
+    public cancelHandler({sender, rowIndex}) {
       this.closeEditor(sender, rowIndex);
     }
 
-    private closeEditor(grid, rowIndex = this.editedRowIndex) {
+    public closeEditor(grid, rowIndex = this.editedRowIndex) {
       grid.closeRow(rowIndex);
       this.editedRowIndex = undefined;
       this.formGroup = undefined;
@@ -80,7 +92,8 @@ export class ApplicationComponent implements OnInit{
     //api actions
     public getList(): void{
       this.servicio.getList().subscribe(data => {
-        this.gridData = data;
+        this.aplicaciones = data;
+        this.gridData = process(this.aplicaciones, this.state);
       }, e => {
         sessionStorage.removeItem('token');
         this.router.navigate(['/login']);
@@ -88,12 +101,13 @@ export class ApplicationComponent implements OnInit{
 
     }
 
-    protected saveHandler({sender, rowIndex, formGroup, isNew}) {
+    public saveHandler({sender, rowIndex, formGroup, isNew}) {
       const dataItem: MobileAplicacion = formGroup.value;
 
       if(isNew){
         this.servicio.add(dataItem).subscribe(data => {
-          this.gridData.push(data);
+          this.aplicaciones.push(data);
+          this.gridData = process(this.aplicaciones, this.state);
         }, e =>{
               sessionStorage.removeItem("token");
               this.router.navigate(["/login"]);
@@ -111,7 +125,7 @@ export class ApplicationComponent implements OnInit{
       sender.closeRow(rowIndex);
     }
 
-    protected removeHandler({dataItem}) {
+    public removeHandler({dataItem}) {
       this.dataRemove = dataItem;
       this.confirmModal.modal.open();
     }

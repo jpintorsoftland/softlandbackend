@@ -13,6 +13,7 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { FileRestrictions, SelectEvent, ClearEvent, RemoveEvent } from '@progress/kendo-angular-upload';
 import { ModalConfirmComponent } from '../modal/confirm-modal.component';
 import { ModalFileComponent } from '../modal/file-modal.component';
+import { ModalOkComponent } from '../modal/ok-modal.component';
  
 const distinct = data => data
   .map(x => x.MobileProyecto)
@@ -32,13 +33,15 @@ export class ClientComponent implements OnInit{
     public modalFile: ModalFileComponent;
     public confirmModalTitle: string = "Eliminar cliente";
     public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
+    @ViewChild('okModal')
+    public okModal: ModalOkComponent;
 
     //grid
     public formGroup: FormGroup;
-    private editedRowIndex: number;
+    public editedRowIndex: number;
     public idEdited: number;
-    private idAdmin: number;
-    private idRolAdmin: number;
+    public idAdmin: number;
+    public idRolAdmin: number;
     public dataRemove: any;
     public visibleArchivo: boolean;
     public visibleSubir: boolean;
@@ -59,13 +62,13 @@ export class ClientComponent implements OnInit{
     }
     
 
-    private state: State = {
+    public state: State = {
       skip: 0,
       take: 12
     };
-    private gridData: GridDataResult = process(this.clientes, this.state);
+    public gridData: GridDataResult = process(this.clientes, this.state);
 
-    protected dataStateChange(state: DataStateChangeEvent): void {
+    public dataStateChange(state: DataStateChangeEvent): void {
         this.state = state;
         this.gridData = process(this.clientes, this.state);
     }
@@ -92,20 +95,20 @@ export class ClientComponent implements OnInit{
   
     /***************************************************************************/
     //buttons actions 
-    protected addHandler({sender}) {
+    public addHandler({sender}) {
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
           //'idCliente': new FormControl(0),
           'idProyecto': new FormControl(0),
-          'codigoCliente': new FormControl(""),
-          'nombreCliente': new FormControl(""),
+          'codigoCliente': new FormControl("", Validators.required),
+          'nombreCliente': new FormControl("", Validators.required),
           'activo': new FormControl(true)
       });
       sender.addRow(this.formGroup);
     }
 
-    protected editHandler({sender, rowIndex, dataItem}) {
+    public editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
       this.idEdited = dataItem.idCliente;
@@ -123,11 +126,11 @@ export class ClientComponent implements OnInit{
     }
     
 
-    protected cancelHandler({sender, rowIndex}) {
+    public cancelHandler({sender, rowIndex}) {
       this.closeEditor(sender, rowIndex);
     }
 
-    private closeEditor(grid, rowIndex = this.editedRowIndex) {
+    public closeEditor(grid, rowIndex = this.editedRowIndex) {
       grid.closeRow(rowIndex);
       this.editedRowIndex = undefined;
       this.formGroup = undefined;
@@ -152,7 +155,7 @@ export class ClientComponent implements OnInit{
 
     }
 
-    protected saveHandler({sender, rowIndex, formGroup, isNew}) {
+    public saveHandler({sender, rowIndex, formGroup, isNew}) {
       const dataItem: MobileCliente = formGroup.value;
       
       if(isNew){
@@ -177,7 +180,7 @@ export class ClientComponent implements OnInit{
       sender.closeRow(rowIndex);
     }
 
-    private asignClientToAdmin(idAdmin: number, idClient: number){
+    public asignClientToAdmin(idAdmin: number, idClient: number){
       this.servicio.urlRequest = environment.urlUsersAsigned;
       let dataItem = new MobileAdminClientes(0, idAdmin, idClient);
       
@@ -192,7 +195,7 @@ export class ClientComponent implements OnInit{
 
     }
 
-    protected removeHandler({dataItem}) {
+    public removeHandler({dataItem}) {
       this.dataRemove = dataItem;
       this.confirmModal.modal.open();
     }
@@ -266,7 +269,7 @@ export class ClientComponent implements OnInit{
     }
     */
 
-    private ProcessFileClient(text: Array<string>){
+    public ProcessFileClient(text: Array<string>){
       let clients = new Array<MobileCliente>();
 
       for(let x = 1; x < text.length; x++){
@@ -283,7 +286,7 @@ export class ClientComponent implements OnInit{
 
     }
 
-    private SendClientsList(clients: Array<MobileCliente>){
+    public SendClientsList(clients: Array<MobileCliente>){
       let uri  = environment.urlClients + "/sincronizacion";
       let url = this.servicio.getUrl(uri);
 
@@ -292,6 +295,7 @@ export class ClientComponent implements OnInit{
           if(this.idRolAdmin==2) this.asignClientListToAdmin(this.idAdmin, data);
           this.getList();
           this.modalFile.modal.close();
+          this.okModal.modal.open();
       }, e =>{
           sessionStorage.removeItem("token");
           this.router.navigate(["/login"]);
@@ -299,7 +303,7 @@ export class ClientComponent implements OnInit{
     }
 
 
-    private asignClientListToAdmin(idAdmin: number, clients: Array<MobileResultadoSincronizacion>){
+    public asignClientListToAdmin(idAdmin: number, clients: Array<MobileResultadoSincronizacion>){
       this.servicio.urlRequest = environment.urlUsersAsigned + "/sincronizacion";
 
       let asignedClients = new Array<MobileAdminClientes>();

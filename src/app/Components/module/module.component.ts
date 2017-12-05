@@ -1,10 +1,10 @@
+import { MobileModulo } from './../../Classes/MobileModulo';
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MobileModulo } from '../../Classes/MobileModulo';
 import { Router } from '@angular/router';
 import { CRUDService } from '../../Services/CRUDService/CRUDService';
 import { environment } from '../../../environments/environment';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridComponent, GridDataResult, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 import { ModalConfirmComponent } from '../modal/confirm-modal.component';
 
@@ -13,7 +13,7 @@ import { ModalConfirmComponent } from '../modal/confirm-modal.component';
     templateUrl: 'module.component.html'
 })
 export class ModuleComponent {
-    @Input() gridData: Array<MobileModulo>;
+    @Input() modulos = new Array<MobileModulo>();
     @ViewChild('confirmModal')
     public confirmModal: ModalConfirmComponent;
     public confirmModalTitle: string = "Eliminar aplicacion";
@@ -21,10 +21,22 @@ export class ModuleComponent {
 
     //grid
     public formGroup: FormGroup;
-    private editedRowIndex: number;
+    public editedRowIndex: number;
     public idEdited: number;
     public activoEdited: boolean;
     public dataRemove: any;
+
+    public state: State = {
+      skip: 0,
+      take: 12
+    };
+    public gridData: GridDataResult = process(this.modulos, this.state);
+
+    public dataStateChange(state: DataStateChangeEvent): void {
+        this.state = state;
+        this.gridData = process(this.modulos, this.state);
+    }
+
 
     constructor(private servicio: CRUDService, private router: Router){
         servicio.urlRequest = environment.urlModules;
@@ -38,7 +50,7 @@ export class ModuleComponent {
   
     /***************************************************************************/
     //buttons actions 
-    protected addHandler({sender}) {
+    public addHandler({sender}) {
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
@@ -48,7 +60,7 @@ export class ModuleComponent {
       sender.addRow(this.formGroup);
     }
 
-    protected editHandler({sender, rowIndex, dataItem}) {
+    public editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
       this.idEdited = dataItem.idModulo;
@@ -64,11 +76,11 @@ export class ModuleComponent {
     }
     
 
-    protected cancelHandler({sender, rowIndex}) {
+    public cancelHandler({sender, rowIndex}) {
       this.closeEditor(sender, rowIndex);
     }
 
-    private closeEditor(grid, rowIndex = this.editedRowIndex) {
+    public closeEditor(grid, rowIndex = this.editedRowIndex) {
       grid.closeRow(rowIndex);
       this.editedRowIndex = undefined;
       this.formGroup = undefined;
@@ -81,7 +93,8 @@ export class ModuleComponent {
     //api actions
     public getList(): void{
       this.servicio.getList().subscribe(data => {
-        this.gridData = data;
+        this.modulos = data;
+        this.gridData = process(this.modulos, this.state);
       }, e => {
         sessionStorage.removeItem('token');
         this.router.navigate(['/login']);
@@ -89,12 +102,13 @@ export class ModuleComponent {
 
     }
 
-    protected saveHandler({sender, rowIndex, formGroup, isNew}) {
+    public saveHandler({sender, rowIndex, formGroup, isNew}) {
       const dataItem: MobileModulo = formGroup.value;
 
       if(isNew){
         this.servicio.add(dataItem).subscribe(data => {
-          this.gridData.push(data);
+          this.modulos.push(data);
+          this.gridData = process(this.modulos, this.state);
         }, e =>{
               sessionStorage.removeItem("token");
               this.router.navigate(["/login"]);
@@ -112,7 +126,7 @@ export class ModuleComponent {
       sender.closeRow(rowIndex);
     }
 
-    protected removeHandler({dataItem}) {
+    public removeHandler({dataItem}) {
       this.dataRemove = dataItem;
       this.confirmModal.modal.open();
     }

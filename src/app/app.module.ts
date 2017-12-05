@@ -32,6 +32,7 @@ import { InstanceComponent } from './Components/instance/instance.component';
 import { CompanyComponent } from './Components/company/company.component';
 import { ModalConfirmComponent } from './Components/modal/confirm-modal.component';
 import { ModalFileComponent } from './Components/modal/file-modal.component';
+import { ModalOkComponent } from './Components/modal/ok-modal.component';
 
 //services
 import { CRUDService } from './Services/CRUDService/CRUDService';
@@ -60,7 +61,8 @@ import { ConsultantGuard } from "./Guards/consultant-guard";
       InstanceComponent,
       CompanyComponent,
       ModalConfirmComponent,
-      ModalFileComponent
+      ModalFileComponent,
+      ModalOkComponent
   ],
   imports: [
       BrowserModule,

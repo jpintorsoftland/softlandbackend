@@ -13,15 +13,32 @@
     (cancel)="cancelHandler($event)"
     (save)="saveHandler($event)" 
     (remove)="removeHandler($event)"
-    (add)="addHandler($event)">
+    (add)="addHandler($event)"
+    [sortable]="true"
+    [pageable]="true"
+    [filterable]="true"
+    [pageSize]="state.take"
+    [sort]="state.sort"
+    [skip]="state.skip"
+    [filter]="state.filter"
+    [sortable]="true"
+    (dataStateChange)="dataStateChange($event)">
 
     <ng-template kendoGridToolbarTemplate>
         <button kendoGridAddCommand class="k-primary s-primary">
             <i class="k-icon fa fa-plus fa-fw"></i>&nbsp;Crear nuevo</button>
     </ng-template>
 
-    <kendo-grid-column field="idAplicacion" title="ID" width="40"></kendo-grid-column>
-    <kendo-grid-column field="descripcion" title="Descripcion" width="400"></kendo-grid-column>
+    <kendo-grid-column field="idAplicacion" title="ID" width="40" [filterable]="false"></kendo-grid-column>
+    <kendo-grid-column field="descripcion" title="Descripcion" width="400">
+        <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
+            <kendo-grid-string-filter-cell
+                [showOperators]="false"
+                [column]="column"
+                [filter]="filter">
+            </kendo-grid-string-filter-cell>
+        </ng-template>
+    </kendo-grid-column>
 
     <kendo-grid-command-column title="Acciones" width="120">
         <ng-template kendoGridCellTemplate let-isNew="isNew">
@@ -35,7 +52,9 @@
             <button kendoGridCancelCommand class="s-button" title="{{ isNew ? 'Descartar' : 'Cancelar' }}">
                     <i class="k-icon fa fa-remove fa-fw"></i>
             </button>
-            <button kendoGridSaveCommand class="k-primary s-primary" title="{{ isNew ? 'Añadir' : 'Guardar' }}">
+            <button kendoGridSaveCommand class="k-primary s-primary" 
+                    [disabled]="formGroup?.invalid" 
+                    title="{{ isNew ? 'Añadir' : 'Guardar' }}">
                     <i class="k-icon fa fa-save fa-fw"></i>
             </button>
         </ng-template>

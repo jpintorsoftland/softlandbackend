@@ -34,13 +34,13 @@ export class AdminComponent implements OnInit{
     public visibleForm: boolean;
 
 
-    private state: State = {
+    public state: State = {
         skip: 0,
         take: 12
     };
-    private gridData: GridDataResult = process(this.administradores, this.state);
+    public gridData: GridDataResult = process(this.administradores, this.state);
 
-    protected dataStateChange(state: DataStateChangeEvent): void {
+    public dataStateChange(state: DataStateChangeEvent): void {
         this.state = state;
         this.gridData = process(this.administradores, this.state);
     }
@@ -68,7 +68,7 @@ export class AdminComponent implements OnInit{
   
     /***************************************************************************/
     //buttons actions 
-    protected addHandler({sender}) {
+    public addHandler({sender}) {
       this.closeEditor(sender);
 
       this.formGroup = new FormGroup({
@@ -80,7 +80,7 @@ export class AdminComponent implements OnInit{
       sender.addRow(this.formGroup);
     }
 
-    protected editHandler({sender, rowIndex, dataItem}) {
+    public editHandler({sender, rowIndex, dataItem}) {
       this.closeEditor(sender);
 
       this.idEdited = dataItem.idAdmin;
@@ -100,12 +100,12 @@ export class AdminComponent implements OnInit{
     }
     
 
-    protected cancelHandler({sender, rowIndex}) {
+    public cancelHandler({sender, rowIndex}) {
       this.closeEditor(sender, rowIndex);
       this.visibleForm = true;
     }
 
-    private closeEditor(grid, rowIndex = this.editedRowIndex) {
+    public closeEditor(grid, rowIndex = this.editedRowIndex) {
       this.visibleForm = false;
       grid.closeRow(rowIndex);
       this.editedRowIndex = undefined;
@@ -131,7 +131,8 @@ export class AdminComponent implements OnInit{
 
     }
 
-    protected saveHandler({sender, rowIndex, formGroup, isNew}) {
+    public saveHandler({sender, rowIndex, formGroup, isNew}) {
+
       const dataItem: MobileAdmin = formGroup.value;
 
       if(isNew){
@@ -160,7 +161,7 @@ export class AdminComponent implements OnInit{
       sender.closeRow(rowIndex);
     }
 
-    protected removeHandler({dataItem}) {
+    public removeHandler({dataItem}) {
       this.dataRemove = dataItem;
       this.confirmModal.modal.open();
     }
