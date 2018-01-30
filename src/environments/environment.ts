@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  apiURL: "http://softlandcloudbackendtest.azurewebsites.net/api/",
+  apiURL: "http://softlandcloudbackendcert.azurewebsites.net/api/",
   urlAdmins: "admin/administradores",
   urlAdminsFilter: "admin/administradores_rol",
   urlApps: "aplicaciones",
