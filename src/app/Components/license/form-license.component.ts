@@ -21,7 +21,7 @@ export class FormLicenseComponent implements OnInit{
     private idLicencia: number;
     private isNew: boolean;
     private idAdmin: number;
-    @Input() licencia: MobileLicencia = new MobileLicencia(0, 0, 0, 0, 0, 0, "", "", "", "", new Date(), new Date(), false, true);
+    @Input() licencia: MobileLicencia = new MobileLicencia(0, null, null, null, null, null, "", "", "", "", new Date(), new Date(), false, true);
     @Input() clientes: Array<MobileCliente>;
     @Input() instancias: Array<MobileInstancia>;
     @Input() empresas: Array<MobileEmpresa>;
@@ -31,6 +31,10 @@ export class FormLicenseComponent implements OnInit{
     //public modal: ModalComponent;
     @ViewChild('okModal')
     public okModal: ModalOkComponent;
+
+    public myForm: FormGroup = new FormGroup({
+      cliente: new FormControl(),
+    });
     
 
     constructor(private servicio: CRUDService, private router: Router){
@@ -217,7 +221,10 @@ export class FormLicenseComponent implements OnInit{
         if(!this.licencia.caduca){
           this.licencia.fechaInicio = null;
           this.licencia.fechaFin = null;
-        }
+        }else{
+          this.licencia.fechaInicio.setHours(12,0,0,0);
+          this.licencia.fechaFin.setHours(12,0,0,0);
+		    }
       
         if(this.isNew){
               this.servicio.add(this.licencia).subscribe(data => {

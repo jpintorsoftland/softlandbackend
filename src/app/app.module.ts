@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { GridModule } from '@progress/kendo-angular-grid';
+import { PopupModule } from '@progress/kendo-angular-popup';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { InputsModule } from '@progress/kendo-angular-inputs';
@@ -44,6 +45,9 @@ import { AuthGuard } from './Guards/auth-guard';
 import { SuperAdminGuard } from "./Guards/superadmin-guard";
 import { ConsultantGuard } from "./Guards/consultant-guard";
 
+//directives
+import { PopupAnchorDirective } from './Directives/popup.anchor-target.directive';
+
 @NgModule({
   declarations: [
       LoginComponent,
@@ -62,7 +66,8 @@ import { ConsultantGuard } from "./Guards/consultant-guard";
       CompanyComponent,
       ModalConfirmComponent,
       ModalFileComponent,
-      ModalOkComponent
+      ModalOkComponent,
+      PopupAnchorDirective
   ],
   imports: [
       BrowserModule,
@@ -73,6 +78,7 @@ import { ConsultantGuard } from "./Guards/consultant-guard";
       Routing,
       ButtonsModule,
       GridModule,
+      PopupModule,
       DropDownsModule,
       DateInputsModule,
       InputsModule,

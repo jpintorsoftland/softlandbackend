@@ -35,6 +35,7 @@ export class UserComponent implements OnInit{
     public formGroup: FormGroup;
     public editedRowIndex: number;
     public idEdited: number;
+    public passEdited: string;
     public idAdmin: number;
     public dataRemove: any;
 
@@ -88,6 +89,7 @@ export class UserComponent implements OnInit{
       this.closeEditor(sender);
 
       this.idEdited = dataItem.idUsuario;
+      this.passEdited = dataItem.password;
       this.formGroup = new FormGroup({
         'idCliente': new FormControl(dataItem.idCliente, Validators.required),
         'codigoUsuario': new FormControl(dataItem.codigoUsuario, Validators.required),
@@ -148,6 +150,8 @@ export class UserComponent implements OnInit{
         });
       }else{
         dataItem.idUsuario = this.idEdited;
+        dataItem.password = this.passEdited;
+        
         this.servicio.update(dataItem, dataItem.idUsuario).subscribe(data => {
             this.getList();
         }, e =>{
@@ -250,6 +254,7 @@ export class UserComponent implements OnInit{
       let url = this.servicio.getUrl(uri);
 
       this.servicio.add(users, url).subscribe(data => {
+        console.log("SendUsersList subscribe: " + data );
           this.getList();
           this.modalFile.modal.close();
           this.okModal.modal.open();

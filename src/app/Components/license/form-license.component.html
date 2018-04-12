@@ -11,116 +11,147 @@
     <div class="panel-body">
 
         <div class="col-md-4 col-md-offset-4">
-  
-                <form class="k-form" action="form" #f="ngForm" novalidate >
+
+            <form class="k-form" action="form" #f="ngForm" validate >
+                
+                <fieldset>
+                    <label class="k-form-field">
+                        <span>Cliente<span class="k-required">*</span></span>
+                        <kendo-dropdownlist class="fillParent"
+                            ngControl="dlCliente"
+                            name="cliente"
+                            [data]="clientes"
+                            textField="nombreCliente"
+                            valueField="idCliente"
+                            [valuePrimitive]="true"
+                            [(ngModel)]="licencia.idCliente"
+                            required >
+                        </kendo-dropdownlist>
+                        
+                        
+                    </label>
+                    <label class="k-form-field">
+                        <span>Empresa<span class="k-required">*</span></span>
+                        <kendo-dropdownlist class="fillParent"
+                            name="empresa"
+                            [data]="empresas"
+                            textField="nombreEmpresa"
+                            valueField="idEmpresa"
+                            [valuePrimitive]="true"
+                            [(ngModel)]="licencia.idEmpresa"
+                            required >
+                        </kendo-dropdownlist>
+                    </label>
+                    <label class="k-form-field">
+                        <span>Instancia<span class="k-required">*</span></span>
+                        <kendo-dropdownlist class="fillParent"
+                            name="instancia"
+                            [data]="instancias"
+                            textField="nombreInstancia"
+                            valueField="idInstancia"
+                            [valuePrimitive]="true"
+                            [(ngModel)]="licencia.idInstancia"
+                            required >
+                        </kendo-dropdownlist>
+                    </label>
+                    <label class="k-form-field">
+                        <span>Módulo<span class="k-required">*</span></span>
+                        <kendo-dropdownlist class="fillParent"
+                            name="modulo"
+                            [data]="modulos"
+                            textField="descripcion"
+                            valueField="idModulo"
+                            [valuePrimitive]="true"
+                            [(ngModel)]="licencia.idModulo"
+                            required >
+                        </kendo-dropdownlist>
+                    </label>
+                    <label class="k-form-field">
+                        <span>Permiso<span class="k-required">*</span></span>
+                        <kendo-dropdownlist class="fillParent"
+                            name="tipo_permiso"
+                            [data]="tipos_permiso"
+                            textField="descripcion"
+                            valueField="idTipoPermiso"
+                            [valuePrimitive]="true"
+                            [(ngModel)]="licencia.idTipoPermiso"
+                            required >
+                        </kendo-dropdownlist>
+                    </label>
+                    <label class="k-form-field">
+                        <span>Inicio</span>
+                        <kendo-datepicker 
+                            class="fillParent"
+                            [(ngModel)]="licencia.fechaInicio" 
+                            name="inicio" 
+                            today="Hoy"
+                            id="inicio" ></kendo-datepicker>
+                        
+                    </label>
+                    <label class="k-form-field">
+                        <span>Fin</span>
+                        <kendo-datepicker 
+                            class="fillParent"
+                            [(ngModel)]="licencia.fechaFin" 
+                            name="fin" 
+                            id="fin" ></kendo-datepicker>
+                        
+                    </label>
+                    <label class="k-form-field">
+                        <div class="col-md-6 noPadding">
+                            <span>Caduca</span>
+                            <input type="checkbox" 
+                                [(ngModel)]="licencia.caduca"
+                                name="caduca" />
+                            
+                        </div>
+                        <div class="col-md-6">
+                            <span>Activo</span>
+                            <input type="checkbox" 
+                                [(ngModel)]="licencia.activo"
+                                name="activo" />
+                            
+                        </div>
+                    </label>
+                </fieldset>
+
+                <!--
+                <div class="col-md-6 divButtonLeftForm">
+                    <a class="k-button k-primary s-primary fillParent" [routerLink]="['/licencias']">
+                            <i class="fa fa-chevron-left fa-fw" aria-hidden="true"></i>&nbsp;Volver</a>
+                </div>
+
+                <div class="col-md-6 divButtonRightForm">
+                    <a class="k-button k-primary s-primary fillParent" (click)="guardar()" >
+                            <i class="fa fa-save fa-fw" aria-hidden="true"></i>&nbsp;Guardar</a>
                     
-                    <fieldset>
-                        <label class="k-form-field">
-                            <span>Cliente</span>
-                            <kendo-dropdownlist class="fillParent"
-                                name="cliente"
-                                [data]="clientes"
-                                textField="nombreCliente"
-                                valueField="idCliente"
-                                [valuePrimitive]="true"
-                                [(ngModel)]="licencia.idCliente">
-                            </kendo-dropdownlist>
-                            
-                        </label>
-                        <label class="k-form-field">
-                            <span>Empresa</span>
-                            <kendo-dropdownlist class="fillParent"
-                                name="empresa"
-                                [data]="empresas"
-                                textField="nombreEmpresa"
-                                valueField="idEmpresa"
-                                [valuePrimitive]="true"
-                                [(ngModel)]="licencia.idEmpresa">
-                            </kendo-dropdownlist>
-                        </label>
-                        <label class="k-form-field">
-                            <span>Instancia</span>
-                            <kendo-dropdownlist class="fillParent"
-                                name="instancia"
-                                [data]="instancias"
-                                textField="nombreInstancia"
-                                valueField="idInstancia"
-                                [valuePrimitive]="true"
-                                [(ngModel)]="licencia.idInstancia">
-                            </kendo-dropdownlist>
-                        </label>
-                        <label class="k-form-field">
-                            <span>Módulo</span>
-                            <kendo-dropdownlist class="fillParent"
-                                name="modulo"
-                                [data]="modulos"
-                                textField="descripcion"
-                                valueField="idModulo"
-                                [valuePrimitive]="true"
-                                [(ngModel)]="licencia.idModulo">
-                            </kendo-dropdownlist>
-                        </label>
-                        <label class="k-form-field">
-                            <span>Permiso</span>
-                            <kendo-dropdownlist class="fillParent"
-                                name="tipo_permiso"
-                                [data]="tipos_permiso"
-                                textField="descripcion"
-                                valueField="idTipoPermiso"
-                                [valuePrimitive]="true"
-                                [(ngModel)]="licencia.idTipoPermiso">
-                            </kendo-dropdownlist>
-                        </label>
-                        <label class="k-form-field">
-                            <span>Inicio</span>
-                            <kendo-datepicker 
-                                class="fillParent"
-                                [(ngModel)]="licencia.fechaInicio" 
-                                name="inicio" 
-                                today="Hoy"
-                                id="inicio" ></kendo-datepicker>
-                            
-                        </label>
-                        <label class="k-form-field">
-                            <span>Fin</span>
-                            <kendo-datepicker 
-                                class="fillParent"
-                                [(ngModel)]="licencia.fechaFin" 
-                                name="fin" 
-                                id="fin" ></kendo-datepicker>
-                            
-                        </label>
-                        <label class="k-form-field">
-                            <div class="col-md-6 noPadding">
-                                <span>Caduca</span>
-                                <input type="checkbox" 
-                                    [(ngModel)]="licencia.caduca"
-                                    name="caduca" />
-                                
-                            </div>
-                            <div class="col-md-6">
-                                <span>Activo</span>
-                                <input type="checkbox" 
-                                    [(ngModel)]="licencia.activo"
-                                    name="activo" />
-                                
-                            </div>
-                        </label>
-                    </fieldset>
-
-
-                    <div class="col-md-6 divButtonLeftForm">
-                        <a class="k-button k-primary s-primary fillParent" [routerLink]="['/licencias']">
-                                <i class="fa fa-chevron-left fa-fw" aria-hidden="true"></i>&nbsp;Volver</a>
-                    </div>
-
-                    <div class="col-md-6 divButtonRightForm">
-                        <a class="k-button k-primary s-primary fillParent" (click)="guardar()">
-                                <i class="fa fa-save fa-fw" aria-hidden="true"></i>&nbsp;Guardar</a>
-                    </div>
+                </div>
+                -->
                 
-                
-                </form>
+
+                <div *ngIf="!f.valid" >
+                    <div class="alert alert-danger">
+                        Debe rellenar los campos obligatorios.
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 divButtonLeftForm">
+                    <a class="k-button k-primary s-primary fillParent" [routerLink]="['/licencias']">
+                        Volver</a>
+                </div>
+
+                <div class="col-md-6 divButtonRightForm">
+                    <button [disabled]="!f.valid" 
+                            (click)="guardar()" 
+                            class="k-button k-primary s-primary fillParent" >
+                        Guardar</button>
+                </div>
+                    
+                    
+            
+            
+            </form>
 
         </div>
               

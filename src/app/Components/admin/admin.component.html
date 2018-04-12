@@ -40,6 +40,18 @@
                 [filter]="filter">
             </kendo-grid-string-filter-cell>
         </ng-template>
+
+
+        <ng-template kendoGridEditTemplate let-column="column" let-formGroup="formGroup" let-isNew="isNew">
+            <input #input class="k-textbox" [formControl]="formGroup.get(column.field)">
+            <kendo-popup [anchor]="input"
+                         *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                         popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+              <span class="k-icon k-i-warning"></span>
+              El campo Nombre es obligatorio
+            </kendo-popup>
+        </ng-template>
+
     </kendo-grid-column>
     <kendo-grid-column field="email" title="Email" width="200">
         <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
@@ -49,6 +61,17 @@
                 [filter]="filter">
             </kendo-grid-string-filter-cell>
         </ng-template>
+
+        <ng-template kendoGridEditTemplate let-column="column" let-formGroup="formGroup" let-isNew="isNew">
+            <input #input class="k-textbox" [formControl]="formGroup.get(column.field)">
+            <kendo-popup [anchor]="input"
+                         *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                         popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+              <span class="k-icon k-i-warning"></span>
+              El campo Email es obligatorio
+            </kendo-popup>
+        </ng-template>
+
     </kendo-grid-column>
     <kendo-grid-column field="idRolAdmin" title="Rol" width="120">
 
@@ -85,10 +108,28 @@
 
     </kendo-grid-column>
 
-    <kendo-grid-column field="password" title="Clave" width="120" editor="password" [filterable]="false">
+    <kendo-grid-column field="password"
+                        title="Clave" 
+                        width="120" 
+                        editor="password" 
+                        [filterable]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
             <div>{{showAsterisk()}}</div>
         </ng-template>
+
+
+        <!--
+        <ng-template kendoGridEditTemplate let-column="column" let-formGroup="formGroup" let-isNew="isNew">
+            <input #input class="k-textbox" [formControl]="formGroup.get(column.field)">
+            <kendo-popup [anchor]="input"
+                         *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                         popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+              <span class="k-icon k-i-warning"></span>
+              El campo Clave es obligatorio
+            </kendo-popup>
+        </ng-template>
+        -->
+
     </kendo-grid-column>
 
     <kendo-grid-command-column title="Acciones" width="120">

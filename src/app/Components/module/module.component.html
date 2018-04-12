@@ -30,13 +30,22 @@
     </ng-template>
     
     <kendo-grid-column field="idModulo" title="ID" width="40" [filterable]="false"></kendo-grid-column>
-    <kendo-grid-column field="descripcion" title="Descripcion" width="400">
+    <kendo-grid-column field="descripcion" title="Descripción" width="400">
         <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
             <kendo-grid-string-filter-cell
                 [showOperators]="false"
                 [column]="column"
                 [filter]="filter">
             </kendo-grid-string-filter-cell>
+        </ng-template>
+        <ng-template kendoGridEditTemplate let-column="column" let-formGroup="formGroup" let-isNew="isNew">
+            <input #input class="k-textbox" [formControl]="formGroup.get(column.field)">
+            <kendo-popup [anchor]="input"
+                         *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                         popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+              <span class="k-icon k-i-warning"></span>
+              El campo Descripción es obligatorio
+            </kendo-popup>
         </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="activo" title="Activo"  editor="boolean" width="120" [filterable]="false">

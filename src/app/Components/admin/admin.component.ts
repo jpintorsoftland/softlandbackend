@@ -86,6 +86,8 @@ export class AdminComponent implements OnInit{
       this.idEdited = dataItem.idAdmin;
       this.passEdited = dataItem.password;
       this.activoEdited = dataItem.activo;
+
+      console.log("editHandler password " + dataItem.password);
       
       this.formGroup = new FormGroup({
         'nombreAdmin': new FormControl(dataItem.nombreAdmin, Validators.required),

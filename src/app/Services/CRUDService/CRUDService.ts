@@ -22,7 +22,8 @@ export class CRUDService{
         return this.http.get(url + '/' + id, this.getOptions() ).map(this.getDatos).catch(this.error);
     }
 
-    add(model: any, url : string = this.getUrl(this.urlRequest) ): Observable<any> { 
+    add(model: any, url : string = this.getUrl(this.urlRequest) ): Observable<any> {  
+        console.log("add url: " + url + ' - ' + model);
         return this.http.post(url, model, this.getOptions() ).map(this.getDatos).catch(this.error);
     }
 

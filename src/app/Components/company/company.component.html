@@ -40,6 +40,15 @@
                 [filter]="filter">
             </kendo-grid-string-filter-cell>
         </ng-template>
+        <ng-template kendoGridEditTemplate let-column="column" let-formGroup="formGroup" let-isNew="isNew">
+            <input #input class="k-textbox" [formControl]="formGroup.get(column.field)">
+            <kendo-popup [anchor]="input"
+                         *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                         popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+              <span class="k-icon k-i-warning"></span>
+              El campo Código es obligatorio
+            </kendo-popup>
+        </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="nombreEmpresa" title="Nombre" width="200">
         <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
@@ -48,6 +57,15 @@
                 [column]="column"
                 [filter]="filter">
             </kendo-grid-string-filter-cell>
+        </ng-template>
+        <ng-template kendoGridEditTemplate let-column="column" let-formGroup="formGroup" let-isNew="isNew">
+            <input #input class="k-textbox" [formControl]="formGroup.get(column.field)">
+            <kendo-popup [anchor]="input"
+                         *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                         popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+              <span class="k-icon k-i-warning"></span>
+              El campo Nombre es obligatorio
+            </kendo-popup>
         </ng-template>
     </kendo-grid-column>
 
@@ -60,8 +78,11 @@
             <!-- add/edit form -->
             <ng-template kendoGridEditTemplate
                 let-dataItem="dataItem"
+                let-column="column"
                 let-formGroup="formGroup">
                 <kendo-dropdownlist
+                    #ddlc="popupAnchor"
+                    popupAnchor
                     [data]="clientes"
                     textField="nombreCliente"
                     valueField="idCliente"
@@ -69,6 +90,13 @@
                     [(ngModel)]="dataItem.idCliente"
                     [formControl]="formGroup.get('idCliente')">
                 </kendo-dropdownlist>
+                <kendo-popup
+                    [anchor]="ddlc.element"
+                    *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                    popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+                    <span class="k-icon k-i-warning"></span>
+                    El campo Cliente es obligatorio
+                </kendo-popup>
             </ng-template>
 
             <!-- filter -->
@@ -93,8 +121,11 @@
              <!-- add/edit form -->
             <ng-template kendoGridEditTemplate
                 let-dataItem="dataItem"
+                let-column="column"
                 let-formGroup="formGroup">
                 <kendo-dropdownlist
+                    #ddli="popupAnchor"
+                    popupAnchor
                     [data]="instancias"
                     textField="nombreInstancia"
                     valueField="idInstancia"
@@ -102,6 +133,13 @@
                     [(ngModel)]="dataItem.idInstancia"
                     [formControl]="formGroup.get('idInstancia')">
                 </kendo-dropdownlist>
+                <kendo-popup
+                    [anchor]="ddli.element"
+                    *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                    popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+                    <span class="k-icon k-i-warning"></span>
+                    El campo Instancia es obligatorio
+                </kendo-popup>
             </ng-template>
 
             <!-- filter -->

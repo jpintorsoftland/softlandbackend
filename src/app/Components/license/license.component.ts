@@ -27,7 +27,7 @@ export class LicenseComponent implements OnInit{
     @Input() tipos_permiso: Array<MobileTipoPermiso>;
     @ViewChild('confirmModal')
     public confirmModal: ModalConfirmComponent;
-    public confirmModalTitle: string = "Eliminar aplicacion";
+    public confirmModalTitle: string = "Eliminar licencia";
     public confirmModalMessage: string = "¿Seguro que desea eliminar el registro?";
 
     //grid

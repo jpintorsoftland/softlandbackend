@@ -54,6 +54,15 @@
               [filter]="filter">
             </kendo-grid-string-filter-cell>
           </ng-template>
+          <ng-template kendoGridEditTemplate let-column="column" let-formGroup="formGroup" let-isNew="isNew">
+              <input #input class="k-textbox" [formControl]="formGroup.get(column.field)">
+              <kendo-popup [anchor]="input"
+                           *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                           popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+                <span class="k-icon k-i-warning"></span>
+                El campo Código es obligatorio
+              </kendo-popup>
+          </ng-template>
     </kendo-grid-column>
 
     <kendo-grid-column field="idProyecto" title="Proyecto" width="150">
@@ -64,8 +73,11 @@
         <!-- add/edit form -->
         <ng-template kendoGridEditTemplate
             let-dataItem="dataItem"
+            let-column="column"
             let-formGroup="formGroup">
             <kendo-dropdownlist
+                #ddlp="popupAnchor"
+                popupAnchor
                 [data]="proyectos"
                 textField="descripcion"
                 valueField="idProyecto"
@@ -73,6 +85,13 @@
                 [(ngModel)]="dataItem.idProyecto"
                 [formControl]="formGroup.get('idProyecto')">
             </kendo-dropdownlist>
+            <kendo-popup
+                [anchor]="ddlp.element"
+                *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+                <span class="k-icon k-i-warning"></span>
+                El campo Proyecto es obligatorio
+            </kendo-popup>
         </ng-template>
 
         <!-- filter -->
@@ -97,6 +116,15 @@
               [column]="column"
               [filter]="filter">
             </kendo-grid-string-filter-cell>
+        </ng-template>
+        <ng-template kendoGridEditTemplate let-column="column" let-formGroup="formGroup" let-isNew="isNew">
+            <input #input class="k-textbox" [formControl]="formGroup.get(column.field)">
+            <kendo-popup [anchor]="input"
+                         *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                         popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg" >
+              <span class="k-icon k-i-warning"></span>
+              El campo Nombre es obligatorio
+            </kendo-popup>
         </ng-template>
     </kendo-grid-column>
   
